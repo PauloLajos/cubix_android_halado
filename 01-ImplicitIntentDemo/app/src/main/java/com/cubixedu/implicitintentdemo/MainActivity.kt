@@ -37,6 +37,25 @@ class MainActivity : AppCompatActivity() {
         //intentSend.`package` = "com.facebook.katana"
         intentSend.putExtra(Intent.EXTRA_TEXT, "Jee  Tanfolyam!")
         startActivity(intentSend)
-        startActivity(Intent.createChooser(intentSend, "Select share app"))
+        //startActivity(Intent.createChooser(intentSend, "Select share app"))
+    }
+
+    fun intentWaze(v: View) {
+        //String wazeUri = "waze://?favorite=Home&navigate=yes";
+        //val wazeUri = "waze://?ll=40.761043, -73.980545&navigate=yes"
+        val wazeUri = "waze://?q=BME&navigate=yes"
+
+        val intentTest = Intent(Intent.ACTION_VIEW)
+        intentTest.data = Uri.parse(wazeUri)
+        startActivity(intentTest)
+    }
+
+    fun intentStreetView(v: View) {
+        val gmmIntentUri = Uri.parse(
+            "google.streetview:cbll=29.9774614,31.1329645&cbp=0,30,0,0,-15"
+        )
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        startActivity(mapIntent)
     }
 }

@@ -29,4 +29,18 @@
         android:layout_height="wrap_content"
         android:text="Send demo" />
 
+    <Button
+        android:id="@+id/btnIntentWaze"
+        android:onClick="intentWaze"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Waze demo" />
+
+    <Button
+        android:id="@+id/btnIntentStreetView"
+        android:onClick="intentStreetView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="StreetView demo" />
+
 </LinearLayout>
