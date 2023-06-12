@@ -5,6 +5,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.View
 import com.peacefulstormcorner.implicitintentdemo.databinding.ActivityMainBinding
 
@@ -18,6 +19,14 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
+
+        // NEM TÖLTI BE....
+        val b = intent.extras
+        if (b != null && b.containsKey(Intent.EXTRA_STREAM)) {
+            val uri = b[Intent.EXTRA_STREAM] as Uri
+            val bitmap = MediaStore.Images.Media.getBitmap(contentResolver, uri)
+            mainBinding.ivData.setImageBitmap(bitmap)
+        }
     }
 
     fun intentSearch(v: View) {
