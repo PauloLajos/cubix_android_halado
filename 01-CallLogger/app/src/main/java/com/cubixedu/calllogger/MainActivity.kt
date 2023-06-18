@@ -1,7 +1,6 @@
 package com.cubixedu.calllogger
 
 import android.Manifest
-import android.content.BroadcastReceiver
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
@@ -20,10 +19,8 @@ class MainActivity : AppCompatActivity() {
 
     private lateinit var outCallAdapter: CustomAdapter
 
-    private lateinit var mBroadcastReceiver: BroadcastReceiver
-
     private companion object {
-        private const val TAG = "PERMISSION_TAG"
+        private const val LOGTAG = "PERMISSION_TAG"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -34,9 +31,7 @@ class MainActivity : AppCompatActivity() {
 
         // permissions to be requested
         val permissions = arrayOf(
-            Manifest.permission.CAMERA,
-            Manifest.permission.RECORD_AUDIO,
-            Manifest.permission.CALL_PHONE
+            Manifest.permission.PROCESS_OUTGOING_CALLS
         )
         // launcher permissions request dialog
         permissionLauncherMultiple.launch(permissions)
@@ -52,7 +47,7 @@ class MainActivity : AppCompatActivity() {
 
         var allAreGranted = true
         for (isGranted in result.values) {
-            Log.d(TAG, "onActivityResult: isGranted: $isGranted")
+            Log.d(LOGTAG, "onActivityResult: isGranted: $isGranted")
             allAreGranted = allAreGranted && isGranted
         }
 
@@ -61,7 +56,7 @@ class MainActivity : AppCompatActivity() {
             multiplePermissionsGranted()
         } else {
             // All or some Permissions were denied so can't do the task that requires that permission
-            Log.d(TAG, "onActivityResult: All or some permissions denied...")
+            Log.d(LOGTAG, "onActivityResult: All or some permissions denied...")
             Toast.makeText(
                 this@MainActivity,
                 "All or some permissions denied...",
