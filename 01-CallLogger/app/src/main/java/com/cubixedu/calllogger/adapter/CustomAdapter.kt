@@ -17,7 +17,6 @@ import com.cubixedu.calllogger.databinding.RowOutcallBinding
 class CustomAdapter(private val context: Context):
     ListAdapter<OutCallEntity, CustomAdapter.ViewHolder>(CallDiffCallback()) {
 
-    private var outCallItems = AppDatabase.getInstance(context).outCallDAO()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding = RowOutcallBinding
@@ -26,7 +25,7 @@ class CustomAdapter(private val context: Context):
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        //holder.bind(outCallItems[holder.adapterPosition])
+        holder.bind(getItem(position))
     }
 
     inner class ViewHolder(private val binding: RowOutcallBinding) : RecyclerView.ViewHolder(binding.root) {

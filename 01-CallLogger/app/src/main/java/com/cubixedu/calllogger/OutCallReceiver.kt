@@ -14,14 +14,15 @@ class OutCallReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent) {
         val outNumber = intent.getStringExtra(Intent.EXTRA_PHONE_NUMBER)
 
-        thread {
+        Thread {
             AppDatabase.getInstance(context!!).outCallDAO().addCall(
                 OutCallEntity(
                     null,
-                    Date(System.currentTimeMillis()).toString(), outNumber!!
+                    Date(System.currentTimeMillis()).toString(),
+                    outNumber!!
                 )
             )
-        }
+        }.start()
 
         Toast.makeText(context, outNumber, Toast.LENGTH_LONG).show()
     }

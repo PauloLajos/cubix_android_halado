@@ -12,19 +12,15 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun outCallDAO(): OutCallDAO
 
     companion object {
-        private var INSTANCE: AppDatabase? = null
+        private var outCallInstance: AppDatabase? = null
 
         fun getInstance(context: Context): AppDatabase {
-            if (INSTANCE == null) {
-                INSTANCE = Room.databaseBuilder(context.applicationContext,
+            if (outCallInstance == null) {
+                outCallInstance = Room.databaseBuilder(context.applicationContext,
                     AppDatabase::class.java, "outcall_database.db")
                     .build()
             }
-            return INSTANCE!!
-        }
-
-        fun destroyInstance() {
-            INSTANCE = null
+            return outCallInstance!!
         }
     }
 }
