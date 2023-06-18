@@ -1,22 +1,20 @@
 package com.cubixedu.calllogger
 
 import android.content.BroadcastReceiver
+import android.app.Service
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
+import android.telephony.TelephonyManager
 import android.content.pm.PackageManager
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import androidx.recyclerview.widget.RecyclerView
 import com.cubixedu.calllogger.adapter.CustomAdapter
 import com.cubixedu.calllogger.data.AppDatabase
-import com.cubixedu.calllogger.data.OutCallEntity
 import com.cubixedu.calllogger.databinding.ActivityMainBinding
-import kotlin.concurrent.thread
 
 
 class MainActivity : AppCompatActivity() {
@@ -38,6 +36,8 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+
+        requestNeededPermission()
 
         initDataBase()
     }
@@ -90,15 +90,26 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun requestNeededPermission() {
-        /*if (ContextCompat.checkSelfPermission(this,
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE)
+            != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf<String>(
+                    Manifest.permission.PROCESS_OUTGOING_CALLS,
+                    Manifest.permission.READ_PHONE_STATE
+                ),
+                1
+            )
+        }
+
+        if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.PROCESS_OUTGOING_CALLS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this,
                 arrayOf(Manifest.permission.PROCESS_OUTGOING_CALLS),
                 101)
         } else {
         }
-
-         */
     }
 
     override fun onRequestPermissionsResult(requestCode: Int,
