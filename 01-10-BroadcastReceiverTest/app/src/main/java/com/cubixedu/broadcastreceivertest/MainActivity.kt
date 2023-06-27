@@ -7,11 +7,15 @@ import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import android.Manifest
+import android.content.Intent
+import android.content.IntentFilter
 import com.cubixedu.broadcastreceivertest.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
     lateinit var mainBinding: ActivityMainBinding
+
+    private lateinit var airPlaneReceiver: AirPlaneReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -19,6 +23,18 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainBinding.root)
 
         requestNeededPermission()
+
+        airPlaneReceiver = AirPlaneReceiver()
+        registerReceiver(
+            airPlaneReceiver,
+            IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
+        )
+    }
+
+    override fun onDestroy() {
+        unregisterReceiver(airPlaneReceiver)
+        super.onDestroy()
+
     }
 
     private fun requestNeededPermission() {

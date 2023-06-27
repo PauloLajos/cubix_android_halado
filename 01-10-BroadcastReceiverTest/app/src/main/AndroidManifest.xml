@@ -46,6 +46,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="AirPlaneReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.AIRPLANE_MODE"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
