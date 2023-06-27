@@ -53,6 +53,13 @@
             </intent-filter>
         </receiver>
 
+        <receiver android:name="MyBroadcastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.cubixedu.broadcastreceivertest.NOTIFY"/>
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>

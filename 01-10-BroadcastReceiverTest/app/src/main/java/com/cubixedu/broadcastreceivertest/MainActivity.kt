@@ -16,6 +16,7 @@ class MainActivity : AppCompatActivity() {
     lateinit var mainBinding: ActivityMainBinding
 
     private lateinit var airPlaneReceiver: AirPlaneReceiver
+    private lateinit var myBroadcastReceiver: MyBroadcastReceiver
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,10 +30,17 @@ class MainActivity : AppCompatActivity() {
             airPlaneReceiver,
             IntentFilter(Intent.ACTION_AIRPLANE_MODE_CHANGED)
         )
+
+        myBroadcastReceiver = MyBroadcastReceiver()
+        registerReceiver(
+            myBroadcastReceiver,
+            IntentFilter("com.cubixedu.broadcastreceivertest.NOTIFY")
+        )
     }
 
     override fun onDestroy() {
         unregisterReceiver(airPlaneReceiver)
+        unregisterReceiver(myBroadcastReceiver)
         super.onDestroy()
 
     }
