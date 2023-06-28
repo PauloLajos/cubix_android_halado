@@ -5,8 +5,11 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.cubixedu.viewpagertwodemo.databinding.ActivityMainBinding
+import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var pageNames: Array<String>
 
     private lateinit var mainBinding: ActivityMainBinding
 
@@ -29,6 +32,10 @@ class MainActivity : AppCompatActivity() {
 
         mainBinding.mainViewPager.registerOnPageChangeCallback(pageChangeCallback)
 
+        pageNames = resources.getStringArray(R.array.tab_names)
+        TabLayoutMediator(mainBinding.tabLayout, mainBinding.mainViewPager) { tab, position ->
+            tab.text = pageNames[position]
+        }.attach()
     }
 
     override fun onDestroy() {
