@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.cubixedu.dialogfragmentdemo.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), QueryFragment.OnQueryFragmentAnswer {
+class MainActivity : AppCompatActivity(), QueryFragment.OnQueryFragmentAnswer, SelectFruitFragment.OptionsFragmentInterface {
 
     private lateinit var mainBinding: ActivityMainBinding
 
@@ -24,6 +24,10 @@ class MainActivity : AppCompatActivity(), QueryFragment.OnQueryFragmentAnswer {
             queryFragment.show(supportFragmentManager,
                 "QueryFragment")
         }
+
+        mainBinding.btnDialogList.setOnClickListener {
+            SelectFruitFragment().show(supportFragmentManager, SelectFruitFragment.TAG)
+        }
     }
 
     companion object {
@@ -36,5 +40,9 @@ class MainActivity : AppCompatActivity(), QueryFragment.OnQueryFragmentAnswer {
 
     override fun onNegativeSelected() {
         mainBinding.tvData.text = "NOPE selected"
+    }
+
+    override fun onOptionsFragmentResult(fruit: String) {
+        mainBinding.tvData.text = fruit
     }
 }
