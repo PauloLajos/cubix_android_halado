@@ -12,4 +12,17 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show message dialog" />
+
+    <Button
+        android:id="@+id/btnDialogList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show list dialog"
+        />
+
+    <TextView
+        android:id="@+id/tvData"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="24sp"/>
 </LinearLayout>

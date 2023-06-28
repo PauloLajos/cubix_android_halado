@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.cubixedu.dialogfragmentdemo.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), QueryFragment.OnQueryFragmentAnswer {
 
     private lateinit var mainBinding: ActivityMainBinding
 
@@ -28,5 +28,13 @@ class MainActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_MSG= "KEY_MSG"
+    }
+
+    override fun onPositiveSelected(text: String) {
+        mainBinding.tvData.text = "OK selected $text"
+    }
+
+    override fun onNegativeSelected() {
+        mainBinding.tvData.text = "NOPE selected"
     }
 }
