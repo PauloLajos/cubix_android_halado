@@ -7,32 +7,31 @@ import android.view.LayoutInflater
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.DialogFragment
+import com.cubixedu.dialogfragmentdemo.databinding.LayoutDialogBinding
 
 class QueryFragment: DialogFragment() {
+
+    private var _binding : LayoutDialogBinding? = null
+    private val binding
+        get() = _binding!!
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         //val message = arguments?.getString(MainActivity.KEY_MSG)
 
-        val alertDialogBuilder = AlertDialog.Builder(requireContext())
+        _binding = LayoutDialogBinding.inflate(LayoutInflater.from(context))
 
-        val inflater = LayoutInflater.from(context)
-        val dialogLayout = inflater.inflate(R.layout.layout_dialog, null)
-        val etName = dialogLayout.findViewById<EditText>(R.id.etName)
-        alertDialogBuilder.setView(dialogLayout)
-
-
-        alertDialogBuilder.setTitle("Please read this message")
-        //alertDialogBuilder.setMessage(message)
-
-        alertDialogBuilder.setPositiveButton("Okay", DialogInterface.OnClickListener { dialogInterface, _ ->
-            dialogInterface.dismiss()
-            //onQueryFragmentAnswer!!.onPositiveSelected(etName.text.toString())
-        })
-        alertDialogBuilder.setNegativeButton("Nope", DialogInterface.OnClickListener { dialogInterface, _ ->
-            dialogInterface.dismiss()
-            //onQueryFragmentAnswer!!.onNegativeSelected()
-        })
-
-        return alertDialogBuilder.create()
+        return AlertDialog.Builder(requireActivity())
+            .setView(binding.root)
+            .setTitle("Please read this message")
+            //.setMessage(message)
+            .setPositiveButton("Okay", DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                //onQueryFragmentAnswer!!.onPositiveSelected(etName.text.toString())
+            })
+            .setNegativeButton("Nope", DialogInterface.OnClickListener { dialogInterface, _ ->
+                dialogInterface.dismiss()
+                //onQueryFragmentAnswer!!.onNegativeSelected()
+            })
+            .create()
     }
 }
