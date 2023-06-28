@@ -3,6 +3,7 @@ package com.tutorialwing.viewpagertwo
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
 import androidx.viewpager2.widget.ViewPager2
 import com.tutorialwing.viewpagertwo.databinding.ActivityMainBinding
 
@@ -15,6 +16,23 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         val view = mainBinding.root
         setContentView(view)
+
+        onBackPressedDispatcher.addCallback(this, object: OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                // Code that you need to execute on back press i.e. finish()
+                val viewPager = mainBinding.viewPager
+                if (viewPager.currentItem == 0) {
+                    // If the user is currently looking at the first step, allow the system to handle the
+                    // Back button. This calls finish() on this activity and pops the back stack.
+                    //super.onBackPressed()
+                    onBackPressedDispatcher.onBackPressed()
+                } else {
+                    // Otherwise, select the previous step.
+                    viewPager.currentItem = viewPager.currentItem - 1
+                }
+
+            }
+        })
 
         setupViewPager2()
     }
@@ -76,7 +94,7 @@ class MainActivity : AppCompatActivity() {
         })
     }
 
-    override fun onBackPressed() {
+/*    override fun onBackPressed() {
         val viewPager = mainBinding.viewPager
         if (viewPager.currentItem == 0) {
             // If the user is currently looking at the first step, allow the system to handle the
@@ -88,4 +106,5 @@ class MainActivity : AppCompatActivity() {
             viewPager.currentItem = viewPager.currentItem - 1
         }
     }
+ */
 }
