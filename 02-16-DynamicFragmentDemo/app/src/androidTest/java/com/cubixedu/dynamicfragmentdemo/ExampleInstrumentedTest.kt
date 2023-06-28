@@ -1,4 +1,4 @@
-package com.cubixedu.dynamicfragementdemo
+package com.cubixedu.dynamicfragmentdemo
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -19,6 +19,6 @@ class ExampleInstrumentedTest {
     fun useAppContext() {
         // Context of the app under test.
         val appContext = InstrumentationRegistry.getInstrumentation().targetContext
-        assertEquals("com.cubixedu.dynamicfragementdemo", appContext.packageName)
+        assertEquals("com.cubixedu.dynamicfragmentdemo", appContext.packageName)
     }
 }

@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace 'com.cubixedu.dynamicfragementdemo'
+    namespace 'com.cubixedu.dynamicfragmentdemo'
     compileSdk 33
 
     defaultConfig {
-        applicationId "com.cubixedu.dynamicfragementdemo"
+        applicationId "com.cubixedu.dynamicfragmentdemo"
         minSdk 28
         targetSdk 33
         versionCode 1

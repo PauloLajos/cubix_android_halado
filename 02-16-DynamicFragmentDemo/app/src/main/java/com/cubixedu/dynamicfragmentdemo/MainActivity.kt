@@ -1,4 +1,4 @@
-package com.cubixedu.dynamicfragementdemo
+package com.cubixedu.dynamicfragmentdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

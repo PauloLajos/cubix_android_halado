@@ -1,4 +1,4 @@
-package com.cubixedu.dynamicfragementdemo
+package com.cubixedu.dynamicfragmentdemo
 
 import org.junit.Test
 
