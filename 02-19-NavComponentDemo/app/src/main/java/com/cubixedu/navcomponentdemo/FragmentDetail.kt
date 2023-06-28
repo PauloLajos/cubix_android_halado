@@ -5,9 +5,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.navArgs
 import com.cubixedu.navcomponentdemo.databinding.FragmentDetailBinding
 
 class FragmentDetail  : Fragment() {
+
+    val args: FragmentDetailArgs by navArgs()
 
     private var _binding: FragmentDetailBinding? = null
     private val binding get() = _binding!!
@@ -30,6 +33,6 @@ class FragmentDetail  : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //binding.tvData.text = args.person.name
+        binding.tvData.text = args.person.name
     }
 }

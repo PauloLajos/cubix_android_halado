@@ -16,5 +16,9 @@
     <fragment
         android:id="@+id/fragmentDetail"
         android:name="com.cubixedu.navcomponentdemo.FragmentDetail"
-        android:label="FragmentDetail" />
+        android:label="FragmentDetail" >
+        <argument
+            android:name="person"
+            app:argType="com.cubixedu.navcomponentdemo.Person" />
+    </fragment>
 </navigation>
