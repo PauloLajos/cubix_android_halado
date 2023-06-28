@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.viewpager2.widget.ViewPager2
 import com.cubixedu.viewpagertwodemo.databinding.ActivityMainBinding
+import com.cubixedu.viewpagertwodemo.pageanim.DepthPageTransformer
 import com.google.android.material.tabs.TabLayoutMediator
 
 class MainActivity : AppCompatActivity() {
@@ -36,6 +37,9 @@ class MainActivity : AppCompatActivity() {
         TabLayoutMediator(mainBinding.tabLayout, mainBinding.mainViewPager) { tab, position ->
             tab.text = pageNames[position]
         }.attach()
+
+        //binding.mainViewPager.setPageTransformer(ZoomOutPageTransformer())
+        mainBinding.mainViewPager.setPageTransformer(DepthPageTransformer())
     }
 
     override fun onDestroy() {
