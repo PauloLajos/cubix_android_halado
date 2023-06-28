@@ -12,5 +12,21 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
+
+        mainBinding.btnDialogMessage.setOnClickListener {
+            val queryFragment = QueryFragment()
+            queryFragment.isCancelable = false
+
+            val bundle = Bundle()
+            bundle.putString(KEY_MSG, "Hello Advanced Android")
+            queryFragment.arguments = bundle
+
+            queryFragment.show(supportFragmentManager,
+                "QueryFragment")
+        }
+    }
+
+    companion object {
+        const val KEY_MSG= "KEY_MSG"
     }
 }
