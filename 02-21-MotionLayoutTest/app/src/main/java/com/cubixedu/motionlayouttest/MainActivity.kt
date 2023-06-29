@@ -18,5 +18,10 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, KeyPositionDemoActivity::class.java)
             startActivity(intent)
         }
+
+        mainBinding.toolbarButton.setOnClickListener {
+            val intent = Intent(this, ToolbarDemoActivity::class.java)
+            startActivity(intent)
+        }
     }
 }

@@ -4,4 +4,6 @@
     <color name="white">#FFFFFFFF</color>
 
     <color name="brand">#7D1E36</color>
+    <color name="brand_alpha">#997D1E36</color>
+    <color name="transparent">#0000</color>
 </resources>
