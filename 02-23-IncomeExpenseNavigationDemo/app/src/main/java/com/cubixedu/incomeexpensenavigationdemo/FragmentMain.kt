@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
+import androidx.navigation.findNavController
 import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDao
 import com.cubixedu.incomeexpensenavigationdemo.data.BudgetData
 import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDatabase
@@ -45,19 +46,22 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
         savedInstanceState: Bundle?
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        updateChart()
+        binding.btnEdit.setOnClickListener {
+            binding.root.findNavController().navigate(
+                FragmentMainDirections.actionFragmentMainToFragmentEdit()
+            )
+        }
+
+        loadData()
     }
 
-    private fun updateChart() {
-        val entries = ArrayList<PieEntry>()
-
+    private fun loadData() {
         CoroutineScope(Dispatchers.IO).launch {
             // do your background tasks here
             if (budgetDao.getAllBudget().isEmpty()) {
@@ -85,18 +89,25 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
             }
         }
 
-        var income: Float
-        var expense: Float
 
         CoroutineScope(Dispatchers.IO).launch {
-            income = budgetDao.getIncomeSum()
-            expense = -1 * budgetDao.getExpenseSum()
-
-            entries.add(PieEntry(income, "Income"))
-            entries.add(PieEntry(expense, "Expense"))
+            (activity as MainActivity).dataManager.income = budgetDao.getIncomeSum()
+            (activity as MainActivity).dataManager.expense = -1 * budgetDao.getExpenseSum()
         }
 
+        updateChart(
+            (activity as MainActivity).dataManager.income,
+            (activity as MainActivity).dataManager.expense
+        )
+    }
+
+    private fun updateChart(income: Float, expense: Float) {
+        val entries = ArrayList<PieEntry>()
+
         val dataSet = PieDataSet(entries, "Balance")
+
+        entries.add(PieEntry(income, "Income"))
+        entries.add(PieEntry(expense, "Expense"))
 
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
@@ -123,5 +134,11 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
 
     override fun onNothingSelected() {
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        binding.chartBalance.invalidate()
     }
 }
