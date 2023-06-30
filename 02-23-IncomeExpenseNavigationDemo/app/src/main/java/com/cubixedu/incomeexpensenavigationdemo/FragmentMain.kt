@@ -1,33 +1,34 @@
 package com.cubixedu.incomeexpensenavigationdemo
 
+import android.graphics.Color
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.addCallback
+import androidx.fragment.app.Fragment
+import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDao
+import com.cubixedu.incomeexpensenavigationdemo.data.BudgetData
+import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDatabase
+import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentMainBinding
+import com.github.mikephil.charting.components.Description
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.PieData
+import com.github.mikephil.charting.data.PieDataSet
+import com.github.mikephil.charting.data.PieEntry
+import com.github.mikephil.charting.highlight.Highlight
+import com.github.mikephil.charting.listener.OnChartValueSelectedListener
+import kotlin.collections.ArrayList
+import kotlin.concurrent.thread
+import kotlin.math.exp
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
+class FragmentMain : Fragment(), OnChartValueSelectedListener {
 
-/**
- * A simple [Fragment] subclass.
- * Use the [FragmentMain.newInstance] factory method to
- * create an instance of this fragment.
- */
-class FragmentMain : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+    private var _binding: FragmentMainBinding? = null
+    private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
 
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle the back button event
@@ -39,27 +40,53 @@ class FragmentMain : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        _binding = FragmentMainBinding.inflate(inflater, container, false)
+
+        updateChart()
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FragmentMain.
-         */
-        // TODO: Rename and change types and number of parameters
         @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            FragmentMain().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+        fun newInstance() = FragmentMain()
+    }
+
+    private fun updateChart() {
+        val entries = ArrayList<PieEntry>()
+        entries.add(PieEntry(1000f, "Income"))
+        entries.add(PieEntry(2000f, "Expense"))
+
+        val dataSet = PieDataSet(entries, "Balance")
+
+        dataSet.setDrawIcons(false)
+        dataSet.sliceSpace = 3f
+        dataSet.selectionShift = 5f
+
+        val colors = ArrayList<Int>()
+        colors.add(Color.GREEN)
+        colors.add(Color.RED)
+        dataSet.colors = colors
+
+                val data = PieData(dataSet)
+        data.setValueTextSize(11f)
+        data.setValueTextColor(Color.BLUE)
+
+        binding.chartBalance.data = data
+        binding.chartBalance.highlightValues(null)
+        binding.chartBalance.description.text = "Budget"
+        binding.chartBalance.invalidate()
+    }
+
+    override fun onValueSelected(e: Entry?, h: Highlight?) {
+
+    }
+
+    override fun onNothingSelected() {
+
     }
 }
