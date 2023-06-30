@@ -9,5 +9,5 @@ import java.util.Date
 data class BudgetData(
     @PrimaryKey(autoGenerate = true) var budgetId: Int?,
     @ColumnInfo(name = "date") var date: String,
-    @ColumnInfo(name = "amount") var amount: Int
+    @ColumnInfo(name = "amount") var amount: Float
 )

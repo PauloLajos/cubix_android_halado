@@ -11,21 +11,23 @@ import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDao
 import com.cubixedu.incomeexpensenavigationdemo.data.BudgetData
 import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDatabase
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentMainBinding
-import com.github.mikephil.charting.components.Description
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.highlight.Highlight
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener
-import kotlin.collections.ArrayList
-import kotlin.concurrent.thread
-import kotlin.math.exp
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 class FragmentMain : Fragment(), OnChartValueSelectedListener {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var budgetDao: BudgetDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,6 +36,8 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
             // Handle the back button event
             activity?.finish()
         }
+
+        budgetDao = BudgetDatabase.getInstance(requireContext()).budgetDao()
     }
 
     override fun onCreateView(
@@ -42,24 +46,55 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
     ): View? {
         _binding = FragmentMainBinding.inflate(inflater, container, false)
 
-        updateChart()
-
         return binding.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-    }
 
-    companion object {
-        @JvmStatic
-        fun newInstance() = FragmentMain()
+        updateChart()
     }
 
     private fun updateChart() {
         val entries = ArrayList<PieEntry>()
-        entries.add(PieEntry(1000f, "Income"))
-        entries.add(PieEntry(2000f, "Expense"))
+
+        CoroutineScope(Dispatchers.IO).launch {
+            // do your background tasks here
+            if (budgetDao.getAllBudget().isEmpty()) {
+                budgetDao.insertBudget(
+                    BudgetData(
+                        null,
+                        "2023.06.28.",
+                        4000f
+                    )
+                )
+                budgetDao.insertBudget(
+                    BudgetData(
+                        null,
+                        "2023.06.29.",
+                        -1000f
+                    )
+                )
+                budgetDao.insertBudget(
+                    BudgetData(
+                        null,
+                        "2023.06.30.",
+                        5000f
+                    )
+                )
+            }
+        }
+
+        var income: Float
+        var expense: Float
+
+        CoroutineScope(Dispatchers.IO).launch {
+            income = budgetDao.getIncomeSum()
+            expense = -1 * budgetDao.getExpenseSum()
+
+            entries.add(PieEntry(income, "Income"))
+            entries.add(PieEntry(expense, "Expense"))
+        }
 
         val dataSet = PieDataSet(entries, "Balance")
 
@@ -72,7 +107,7 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
         colors.add(Color.RED)
         dataSet.colors = colors
 
-                val data = PieData(dataSet)
+        val data = PieData(dataSet)
         data.setValueTextSize(11f)
         data.setValueTextColor(Color.BLUE)
 

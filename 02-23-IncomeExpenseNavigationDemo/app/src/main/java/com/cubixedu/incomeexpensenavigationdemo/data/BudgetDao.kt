@@ -17,10 +17,10 @@ interface BudgetDao {
     fun getExpenseList(): List<BudgetData>
 
     @Query("SELECT SUM(amount) as sumAmount FROM budgetdata WHERE amount > 0")
-    fun getIncomeSum(): Int
+    fun getIncomeSum(): Float
 
     @Query("SELECT SUM(amount) as sumAmount FROM budgetdata WHERE amount < 0")
-    fun getExpenseSum(): Int
+    fun getExpenseSum(): Float
 
     @Insert
     fun insertBudget(vararg budgetData: BudgetData)

@@ -1,11 +1,11 @@
 package com.cubixedu.incomeexpensenavigationdemo.data
 
+import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.cubixedu.incomeexpensenavigationdemo.FragmentMain
 
-@Database(entities = [BudgetData::class], version = 1)
+@Database(entities = [BudgetData::class], version = 2)
 abstract class BudgetDatabase : RoomDatabase() {
 
     abstract fun budgetDao(): BudgetDao
@@ -13,10 +13,10 @@ abstract class BudgetDatabase : RoomDatabase() {
     companion object {
         private var INSTANCE: BudgetDatabase? = null
 
-        fun getInstance(context: FragmentMain): BudgetDatabase {
+        fun getInstance(context: Context): BudgetDatabase {
             if (INSTANCE == null) {
                 INSTANCE = Room.databaseBuilder(
-                    context.requireContext(),
+                    context,
                     BudgetDatabase::class.java, "budgetdata.db"
                 )
                 .build()
