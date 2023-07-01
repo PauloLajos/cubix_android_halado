@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.cubixedu.incomeexpensenavigationdemo.DataManager
 import com.cubixedu.incomeexpensenavigationdemo.R
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentEditBinding
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentPageExpenseBinding
@@ -32,4 +33,16 @@ class FragmentPageExpense : Fragment() {
         super.onDestroyView()
         _binding = null
     }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.tvExpense.text = "Sum: ${DataManager.expense}"
+
+        binding.btExpense.setOnClickListener {
+            DataManager.expense += binding.etExpense.text.toString().toFloat()
+            binding.tvExpense.text = "Sum: ${DataManager.expense}"
+        }
+    }
+
 }

@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import com.cubixedu.incomeexpensenavigationdemo.DataManager
+import com.cubixedu.incomeexpensenavigationdemo.FragmentEdit
 import com.cubixedu.incomeexpensenavigationdemo.MainActivity
 import com.cubixedu.incomeexpensenavigationdemo.R
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentPageExpenseBinding
@@ -23,16 +25,6 @@ class FragmentPageIncome : Fragment() {
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        binding.tvIncome.text = "Sum: ${(activity as MainActivity).dataManager.income}"
-        binding.btIncome.setOnClickListener {
-            (activity as MainActivity).dataManager.income += binding.etIncome.text.toString().toFloat()
-            binding.tvIncome.text = "Sum: ${(activity as MainActivity).dataManager.income}"
-        }
-    }
-
     companion object {
         @JvmStatic
         fun newInstance() =
@@ -42,5 +34,16 @@ class FragmentPageIncome : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        binding.tvIncome.text = "Sum: ${DataManager.income}"
+
+        binding.btIncome.setOnClickListener {
+            DataManager.income += binding.etIncome.text.toString().toFloat()
+            binding.tvIncome.text = "Sum: ${DataManager.income}"
+        }
     }
 }

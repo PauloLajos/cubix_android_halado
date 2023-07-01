@@ -8,9 +8,7 @@ import android.view.ViewGroup
 import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.navigation.findNavController
-import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDao
-import com.cubixedu.incomeexpensenavigationdemo.data.BudgetData
-import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDatabase
+import androidx.navigation.fragment.navArgs
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentMainBinding
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.PieData
@@ -21,14 +19,11 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 class FragmentMain : Fragment(), OnChartValueSelectedListener {
 
     private var _binding: FragmentMainBinding? = null
     private val binding get() = _binding!!
-
-    private lateinit var budgetDao: BudgetDao
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,8 +32,6 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
             // Handle the back button event
             activity?.finish()
         }
-
-        budgetDao = BudgetDatabase.getInstance(requireContext()).budgetDao()
     }
 
     override fun onCreateView(
@@ -58,56 +51,17 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
             )
         }
 
-        loadData()
+        loadChart()
     }
 
-    private fun loadData() {
-        CoroutineScope(Dispatchers.IO).launch {
-            // do your background tasks here
-            if (budgetDao.getAllBudget().isEmpty()) {
-                budgetDao.insertBudget(
-                    BudgetData(
-                        null,
-                        "2023.06.28.",
-                        4000f
-                    )
-                )
-                budgetDao.insertBudget(
-                    BudgetData(
-                        null,
-                        "2023.06.29.",
-                        -1000f
-                    )
-                )
-                budgetDao.insertBudget(
-                    BudgetData(
-                        null,
-                        "2023.06.30.",
-                        5000f
-                    )
-                )
-            }
-        }
+    private fun loadChart() {
 
-
-        CoroutineScope(Dispatchers.IO).launch {
-            (activity as MainActivity).dataManager.income = budgetDao.getIncomeSum()
-            (activity as MainActivity).dataManager.expense = -1 * budgetDao.getExpenseSum()
-        }
-
-        updateChart(
-            (activity as MainActivity).dataManager.income,
-            (activity as MainActivity).dataManager.expense
-        )
-    }
-
-    private fun updateChart(income: Float, expense: Float) {
         val entries = ArrayList<PieEntry>()
 
         val dataSet = PieDataSet(entries, "Balance")
 
-        entries.add(PieEntry(income, "Income"))
-        entries.add(PieEntry(expense, "Expense"))
+        entries.add(PieEntry(DataManager.income, "Income"))
+        entries.add(PieEntry(DataManager.expense, "Expense"))
 
         dataSet.setDrawIcons(false)
         dataSet.sliceSpace = 3f
@@ -134,11 +88,5 @@ class FragmentMain : Fragment(), OnChartValueSelectedListener {
 
     override fun onNothingSelected() {
 
-    }
-
-    override fun onResume() {
-        super.onResume()
-
-        binding.chartBalance.invalidate()
     }
 }
