@@ -6,20 +6,18 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.cubixedu.incomeexpensenavigationdemo.DataManager
-import com.cubixedu.incomeexpensenavigationdemo.R
-import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentEditBinding
-import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentPageExpenseBinding
+import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentPagesBinding
 
 class FragmentPageExpense : Fragment() {
 
-    private var _binding: FragmentPageExpenseBinding? = null
+    private var _binding: FragmentPagesBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentPageExpenseBinding.inflate(inflater, container, false)
+        _binding = FragmentPagesBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -37,11 +35,12 @@ class FragmentPageExpense : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvExpense.text = "Sum: ${DataManager.expense}"
+        binding.btAdd.text = "Expense"
+        binding.tvSum.text = "Sum: ${DataManager.expense}"
 
-        binding.btExpense.setOnClickListener {
-            DataManager.expense += binding.etExpense.text.toString().toFloat()
-            binding.tvExpense.text = "Sum: ${DataManager.expense}"
+        binding.btAdd.setOnClickListener {
+            DataManager.expense += binding.etValue.text.toString().toFloat()
+            binding.tvSum.text = "Sum: ${DataManager.expense}"
         }
     }
 

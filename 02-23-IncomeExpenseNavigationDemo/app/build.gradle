@@ -3,6 +3,7 @@ plugins {
     id 'org.jetbrains.kotlin.android'
     id 'kotlin-kapt'
     id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-parcelize'
 }
 
 android {
@@ -52,10 +53,18 @@ dependencies {
 
     implementation 'com.andrognito.pinlockview:pinlockview:2.1.0'
 
-    implementation 'androidx.room:room-runtime:2.5.2'
-    kapt 'androidx.room:room-compiler:2.5.2'
+    // Room
+    implementation "androidx.room:room-runtime:2.5.2"
+    kapt "androidx.room:room-compiler:2.5.2"
+    // Kotlin Extensions and Coroutines support for Room
+    implementation "androidx.room:room-ktx:2.5.2"
+    // Coroutines
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-core:1.6.4'
+    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
 
-    implementation 'androidx.room:room-ktx:2.5.2'
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    implementation "androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1"
 
     implementation 'com.github.PhilJay:MPAndroidChart:3.1.0'
 }
