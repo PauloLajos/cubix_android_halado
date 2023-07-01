@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.navigation.fragment.findNavController
 import androidx.viewpager2.widget.ViewPager2
+import com.cubixedu.incomeexpensenavigationdemo.data.BudgetDatabase
 import com.cubixedu.incomeexpensenavigationdemo.databinding.FragmentEditBinding
 import com.cubixedu.incomeexpensenavigationdemo.page.FragmentEditStatePageAdapter
 import com.google.android.material.tabs.TabLayoutMediator
@@ -18,6 +19,9 @@ class FragmentEdit : Fragment() {
 
     private var _binding: FragmentEditBinding? = null
     private val binding get() = _binding!!
+
+    private lateinit var budgetViewModel: BudgetViewModel
+    private lateinit var adapter: BudgetAdapter
 
     private var pageChangeCallback = object : ViewPager2.OnPageChangeCallback() {
         override fun onPageSelected(position: Int) {
