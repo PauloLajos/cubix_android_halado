@@ -64,6 +64,4 @@ abstract class BudgetDatabase : RoomDatabase() {
             }
         }
     }
-
-
 }

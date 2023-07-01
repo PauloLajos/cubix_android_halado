@@ -25,7 +25,7 @@ interface BudgetDao {
     @Query("SELECT id, value FROM budget")
     fun getAllBudget(): LiveData<List<BudgetItem>>
 
-    @Query("SELECT id, value FROM budget WHERE value >= 0")
+    @Query("SELECT SUM(value) as valueSum FROM budget WHERE value >= 0")
     fun getIncome(): LiveData<Float>
 
     @Query("SELECT SUM(value) as valueSum FROM budget WHERE value < 0")

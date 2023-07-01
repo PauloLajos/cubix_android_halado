@@ -39,7 +39,9 @@ class FragmentPageExpense : Fragment() {
         binding.tvSum.text = "Sum: ${DataManager.expense}"
 
         binding.btAdd.setOnClickListener {
-            DataManager.expense += binding.etValue.text.toString().toFloat()
+            if (binding.etValue.text.toString().isNotEmpty()) {
+                DataManager.expense += binding.etValue.text.toString().toFloat()
+            }
             binding.tvSum.text = "Sum: ${DataManager.expense}"
         }
     }
