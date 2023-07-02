@@ -4,11 +4,15 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.IntentSender
 import android.content.pm.PackageManager
+import android.location.Address
+import android.location.Geocoder
 import android.location.Location
+import android.os.Build
 import android.os.Bundle
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.cubixedu.locationandmapdemo.databinding.ActivityMainBinding
 import com.cubixedu.locationandmapdemo.location.MainLocationManager
@@ -22,6 +26,8 @@ import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 import java.text.SimpleDateFormat
 import java.util.Date
+import java.util.Locale
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity(), MainLocationManager.OnNewLocationAvailable {
 
@@ -36,7 +42,13 @@ class MainActivity : AppCompatActivity(), MainLocationManager.OnNewLocationAvail
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        mainLocatoinManager = MainLocationManager(this,this)
+        mainLocatoinManager = MainLocationManager(this, this)
+
+        mainBinding.btnGeocode.setOnClickListener {
+            if (previousLocation != null) {
+                geocodeLocation(previousLocation!!)
+            }
+        }
 
         requestNeededPermission()
     }
@@ -119,13 +131,13 @@ class MainActivity : AppCompatActivity(), MainLocationManager.OnNewLocationAvail
             .setMinUpdateIntervalMillis(5000)
             .setMaxUpdateDelayMillis(10000)
             .build()
-/*
-            interval = 10000
-            fastestInterval = 5000
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        }
+        /*
+                    interval = 10000
+                    fastestInterval = 5000
+                    priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+                }
 
- */
+         */
         val builder = LocationSettingsRequest.Builder()
             .addLocationRequest(locationRequest)
 
@@ -174,4 +186,26 @@ class MainActivity : AppCompatActivity(), MainLocationManager.OnNewLocationAvail
         }
 
         previousLocation = location
-    }}
+    }
+
+    @Suppress("DEPRECATION")
+    private fun geocodeLocation(location: Location) {
+        thread {
+            try {
+                val gc = Geocoder(this, Locale.getDefault())
+                var addrs = gc.getFromLocation(location.latitude, location.longitude, 3)
+                val addr = "${addrs?.get(0)?.getAddressLine(0)}, " +
+                           "${addrs?.get(0)?.getAddressLine(1)}, " +
+                           "${addrs?.get(0)?.getAddressLine(2)}"
+
+                runOnUiThread {
+                    Toast.makeText(this, addr, Toast.LENGTH_LONG).show()
+                }
+            } catch (e: Exception) {
+                e.printStackTrace()
+                Toast.makeText(this@MainActivity, "Error: ${e.message}", Toast.LENGTH_LONG).show()
+            }
+        }
+    }
+
+}

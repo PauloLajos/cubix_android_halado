@@ -27,4 +27,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tvLocation"
         tools:text="Distance" />
 
+    <Button
+        android:id="@+id/btnGeocode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:text="Geocode"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tvDistance" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
