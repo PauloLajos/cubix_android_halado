@@ -4,13 +4,6 @@ plugins {
     id 'com.google.android.libraries.mapsplatform.secrets-gradle-plugin'
 }
 
-def localProperties = new Properties()
-localProperties.load(
-        new FileInputStream(
-                rootProject.file("/media/Linux_Doc/Android/StudioProjects/googleMapApi.key")
-        )
-)
-
 android {
     namespace 'com.practice.googlemapsdemo'
     compileSdk 33
@@ -23,8 +16,6 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-
-        buildConfigField "String", "API_KEY",localProperties['googleMapsApiKey']
     }
 
     buildTypes {
