@@ -14,6 +14,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.LocationSettingsRequest
 import com.google.android.gms.location.LocationSettingsResponse
+import com.google.android.gms.location.Priority
 import com.google.android.gms.location.SettingsClient
 import com.google.android.gms.tasks.Task
 
@@ -77,13 +78,20 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun checkGlobalLocationSettings() {
-        val locationRequest = LocationRequest.create()?.apply {
+        val locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 1000)
+            .setWaitForAccurateLocation(false)
+            .setMinUpdateIntervalMillis(5000)
+            .setMaxUpdateDelayMillis(10000)
+            .build()
+/*
             interval = 10000
             fastestInterval = 5000
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         }
+
+ */
         val builder = LocationSettingsRequest.Builder()
-            .addLocationRequest(locationRequest!!)
+            .addLocationRequest(locationRequest)
 
         val client: SettingsClient = LocationServices.getSettingsClient(this)
         val task: Task<LocationSettingsResponse> = client.checkLocationSettings(builder.build())
@@ -114,6 +122,5 @@ class MainActivity : AppCompatActivity() {
                 }
             }
         }
-
     }
 }
