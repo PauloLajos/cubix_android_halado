@@ -12,9 +12,11 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
 import com.cubixedu.locationandmapdemo.databinding.ActivityMapsBinding
+import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import kotlin.random.Random
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
@@ -66,17 +68,24 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun initMapAndMarkerClick() {
         mMap.setOnMapClickListener {
-            mMap.setOnMapClickListener { latLng ->
-                val marker = mMap.addMarker(
-                    MarkerOptions()
-                        .position(latLng)
-                        .title("Marker demo")
-                        .snippet("Marker details text")
-                )
-                marker!!.isDraggable = true
-                //mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
-                mMap.animateCamera(CameraUpdateFactory.newLatLng(latLng))
-            }
+            val marker = mMap.addMarker(
+                MarkerOptions()
+                    .position(it)
+                    .title("Marker demo")
+                    .snippet("Marker details text")
+            )
+            marker!!.isDraggable = true
+
+            val random = Random(System.currentTimeMillis())
+            val cameraPosition = CameraPosition.Builder()
+                .target(it)
+                .zoom(5f + random.nextInt(15))
+                .tilt(30f + random.nextInt(15))
+                .bearing(-45f + random.nextInt(90))
+                .build()
+
+            //mMap.animateCamera(CameraUpdateFactory.newLatLng(it))
+            mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition))
         }
 
         mMap.setOnMarkerClickListener { marker ->
