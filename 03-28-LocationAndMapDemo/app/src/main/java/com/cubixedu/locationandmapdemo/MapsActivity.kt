@@ -40,7 +40,18 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
             it.uiSettings.isCompassEnabled = true
             it.uiSettings.isMapToolbarEnabled = true
 
-
+            it.setOnMapClickListener {
+                mMap.setOnMapClickListener { latLng ->
+                    val marker = mMap.addMarker(
+                        MarkerOptions()
+                            .position(latLng)
+                            .title("Marker demo")
+                            .snippet("Marker details text")
+                    )
+                    marker!!.isDraggable = true
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(latLng))
+                }
+            }
 
             it.addMarker(MarkerOptions().position(gyula).title("Marker in Gyula"))
             it.moveCamera(CameraUpdateFactory.newLatLng(gyula))
