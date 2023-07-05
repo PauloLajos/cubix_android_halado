@@ -4,7 +4,6 @@ import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -17,12 +16,15 @@ import com.google.android.gms.maps.model.MapStyleOptions
 import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
+import com.google.maps.android.clustering.ClusterManager
 import kotlin.random.Random
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private lateinit var mMap: GoogleMap
     private lateinit var binding: ActivityMapsBinding
+
+    private lateinit var clusterManager: ClusterManager<MyMarkerClusterItem>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,7 +47,9 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         initMap(markerHungary)
         initMapAndMarkerClick()
 
-        drawPolygonAndLine()
+        //drawPolygonAndLine()
+
+        setUpClusterer()
     }
 
     private fun drawPolygonAndLine() {
@@ -101,6 +105,7 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private fun initMap(markerHungary: LatLng) {
 
+        // https://mapstyle.withgoogle.com/
         val mapStyleOptions = MapStyleOptions.loadRawResourceStyle(this, R.raw.mapstyle)
         mMap.setMapStyle(mapStyleOptions)
 
@@ -111,5 +116,28 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
 
         mMap.addMarker(MarkerOptions().position(markerHungary).title("Marker in Hungary"))
         mMap.moveCamera(CameraUpdateFactory.newLatLng(markerHungary))
+    }
+
+    private fun setUpClusterer() {
+        clusterManager = ClusterManager(this, mMap)
+        mMap.setOnCameraIdleListener(clusterManager)
+        mMap.setOnMarkerClickListener(clusterManager)
+        addMarkerClusterItems()
+    }
+
+    private fun addMarkerClusterItems() {
+        // Set some lat/lng coordinates to start with.
+        var lat = 47.5
+        var lng = 19.5
+
+        // Add ten cluster items in close proximity, for purposes of this example.
+        for (i in 0..10) {
+            val offset = i / 60.0
+            lat += offset
+            lng += offset
+            val offsetItem =
+                MyMarkerClusterItem(lat, lng, "Title $i", "Snippet $i")
+            clusterManager.addItem(offsetItem)
+        }
     }
 }
