@@ -35,6 +35,13 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val gyula = LatLng(46.646135,21.271710)
 
         mMap.let {
+            it.isTrafficEnabled = true
+            it.uiSettings.isZoomControlsEnabled = true
+            it.uiSettings.isCompassEnabled = true
+            it.uiSettings.isMapToolbarEnabled = true
+
+
+
             it.addMarker(MarkerOptions().position(gyula).title("Marker in Gyula"))
             it.moveCamera(CameraUpdateFactory.newLatLng(gyula))
         }
