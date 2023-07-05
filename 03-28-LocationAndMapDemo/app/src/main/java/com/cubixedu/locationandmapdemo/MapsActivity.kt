@@ -1,5 +1,7 @@
 package com.cubixedu.locationandmapdemo
 
+import android.app.Activity
+import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
@@ -17,6 +19,10 @@ import com.google.android.gms.maps.model.Polygon
 import com.google.android.gms.maps.model.PolygonOptions
 import com.google.android.gms.maps.model.PolylineOptions
 import com.google.maps.android.clustering.ClusterManager
+import com.sucho.placepicker.AddressData
+import com.sucho.placepicker.Constants
+import com.sucho.placepicker.MapType
+import com.sucho.placepicker.PlacePicker
 import kotlin.random.Random
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
@@ -45,11 +51,63 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback {
         val markerHungary = LatLng(46.646135, 21.271710)
 
         initMap(markerHungary)
+
+        initPlaceSelect()
+
         initMapAndMarkerClick()
 
         //drawPolygonAndLine()
 
         setUpClusterer()
+    }
+
+    private fun initPlaceSelect() {
+        binding.btnSelectPlace.setOnClickListener {
+            val intent = PlacePicker.IntentBuilder()
+                .setLatLong(47.0, 19.0)  // Initial Latitude and Longitude the Map will load into
+                .showLatLong(true)  // Show Coordinates in the Activity
+                .setMapZoom(12.0f)  // Map Zoom Level. Default: 14.0
+                .setAddressRequired(true) // Set If return only Coordinates if cannot fetch Address for the coordinates. Default: True
+                .hideMarkerShadow(true) // Hides the shadow under the map marker. Default: False
+                //.setMarkerDrawable(R.drawable.marker) // Change the default Marker Image
+                //.setMarkerImageImageColor(R.color.colorPrimary)
+                //.setFabColor(R.color.fabColor)
+                //.setPrimaryTextColor(R.color.primaryTextColor) // Change text color of Shortened Address
+                //.setSecondaryTextColor(R.color.secondaryTextColor) // Change text color of full Address
+                //.setBottomViewColor(R.color.bottomViewColor) // Change Address View Background Color (Default: White)
+                //.setMapRawResourceStyle(R.raw.map_style)  //Set Map Style (https://mapstyle.withgoogle.com/)
+                .setMapType(MapType.NORMAL)
+                //.setPlaceSearchBar(true, getString(R.string.google_maps_key)) //Activate GooglePlace Search Bar. Default is false/not activated. SearchBar is a chargeable feature by Google
+                .onlyCoordinates(true)  //Get only Coordinates from Place Picker
+                .hideLocationButton(true)   //Hide Location Button (Default: false)
+                .disableMarkerAnimation(true)   //Disable Marker Animation (Default: false)
+                .build(this)
+            startActivityForResult(intent, Constants.PLACE_PICKER_REQUEST)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == Constants.PLACE_PICKER_REQUEST) {
+            if (resultCode == Activity.RESULT_OK) {
+                val addressData = data?.getParcelableExtra<AddressData>(Constants.ADDRESS_INTENT)
+                Toast.makeText(
+                    this,
+                    "${addressData?.latitude}, ${addressData?.longitude}",
+                    Toast.LENGTH_LONG
+                ).show()
+
+                mMap.animateCamera(
+                    CameraUpdateFactory.newLatLng(
+                        LatLng(
+                            addressData!!.latitude,
+                            addressData!!.longitude
+                        )
+                    )
+                )
+            }
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     private fun drawPolygonAndLine() {
