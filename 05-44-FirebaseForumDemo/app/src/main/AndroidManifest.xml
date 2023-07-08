@@ -36,6 +36,14 @@
             android:exported="false"
             android:label="@string/title_activity_forum"
             android:theme="@style/Theme.FirebaseForumDemo.NoActionBar" />
+
+        <service
+            android:name=".push.MyFirebasePushService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
     </application>
 
 </manifest>
