@@ -1,4 +1,4 @@
-package com.cubixedu.firebaseforumdemo
+package com.cubix.firebaseforumdemo
 
 import org.junit.Test
 

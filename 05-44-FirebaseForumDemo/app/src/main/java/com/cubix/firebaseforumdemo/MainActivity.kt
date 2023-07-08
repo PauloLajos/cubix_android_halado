@@ -1,11 +1,11 @@
-package com.cubixedu.firebaseforumdemo
+package com.cubix.firebaseforumdemo
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
-class ForumActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_forum)
+        setContentView(R.layout.activity_main)
     }
 }
