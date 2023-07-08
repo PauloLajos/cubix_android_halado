@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">RunTrackerDemo</string>
+    <string name="distance_value">%d meters</string>
+    <string name="average_pace_label">Steps</string>
+    <string name="elapsed_time_label">Elapsed time</string>
+    <string name="distance_label">Distance</string>
+    <string name="start_label">Start</string>
+    <string name="stop_label">Stop</string>
+</resources>
