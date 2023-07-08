@@ -22,18 +22,26 @@ class MainActivity : AppCompatActivity() {
         FirebaseMessaging.getInstance().subscribeToTopic("forumpushes")
 
         binding.btnLogin.setOnClickListener {
+
+            binding.btnLogin.isEnabled = false
+
             if (isFormValid()) {
                 FirebaseAuth.getInstance().signInWithEmailAndPassword(
                     binding.etEmail.text.toString(), binding.etPassword.text.toString()
+
                 ).addOnSuccessListener {
                     startActivity(Intent(this@MainActivity, ForumActivity::class.java))
+
                 }.addOnFailureListener{
+
                     val errorMessage = "Login error: ${it.message}"
+
                     Toast.makeText(
                         this@MainActivity,
                         errorMessage,
                         Toast.LENGTH_LONG
                     ).show()
+
                     binding.tvError.text = errorMessage
                     binding.tvError.visibility = View.VISIBLE
                 }
@@ -41,26 +49,37 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnRegister.setOnClickListener {
+
+            binding.btnRegister.isEnabled = false
+
             if (isFormValid()) {
+
                 var errorMessage: String
+
                 FirebaseAuth.getInstance().createUserWithEmailAndPassword(
                     binding.etEmail.text.toString(), binding.etPassword.text.toString()
+
                 ).addOnSuccessListener {
                     errorMessage = "Registration OK"
+
                     Toast.makeText(
                         this@MainActivity,
                         errorMessage,
                         Toast.LENGTH_LONG
                     ).show()
+
                     binding.tvError.text = errorMessage
                     binding.tvError.visibility = View.VISIBLE
+
                 }.addOnFailureListener{
                     errorMessage = "Error: ${it.message}"
+
                     Toast.makeText(
                         this@MainActivity,
                         errorMessage,
                         Toast.LENGTH_LONG
                     ).show()
+
                     binding.tvError.text = errorMessage
                     binding.tvError.visibility = View.VISIBLE
                 }
