@@ -2,7 +2,7 @@
     <string name="app_name">GeoLocationDemo</string>
 
     <string name="title_home">Home</string>
-    <string name="title_map">Dashboard</string>
+    <string name="title_map">Map</string>
 
     <string name="status">Status: %1$s</string>
 
