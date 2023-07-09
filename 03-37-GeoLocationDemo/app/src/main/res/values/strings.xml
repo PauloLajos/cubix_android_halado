@@ -1,0 +1,20 @@
+<resources>
+    <string name="app_name">GeoLocationDemo</string>
+
+    <string name="title_home">Home</string>
+    <string name="title_map">Dashboard</string>
+
+    <string name="status">Status: %1$s</string>
+
+    <string name="latitude">Latitude: %1$f</string>
+    <string name="longitude">Longitude: %1$f</string>
+
+    <string name="provider">Provider: %1$s</string>
+    <string name="accuracy">Accuracy: %1$s</string>
+    <string name="altitude">Altitude: %1$s</string>
+    <string name="speed">Speed: %1$s</string>
+    <string name="time">Time: %1$s</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+</resources>
