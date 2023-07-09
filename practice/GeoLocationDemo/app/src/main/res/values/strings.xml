@@ -1,12 +1,18 @@
 <resources>
     <string name="app_name">GeoLocationDemo</string>
-    <string name="action_settings">Settings</string>
-    <!-- Strings used for fragments for navigation -->
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
+    <string name="title_home">Home</string>
+    <string name="title_dashboard">Dashboard</string>
+    <string name="title_notifications">Notifications</string>
 
-    <string name="button_start_tracking">Start Tacking</string>
-    <string name="button_stop_tracking">Stop Tacking</string>
-    <string name="latitude_label">Latitude: </string>
-    <string name="longitude_label">Longitude: </string>
+    <string name="status">Status: %1$s</string>
+
+    <string name="latitude">Latitude: %1$f</string>
+    <string name="longitude">Longitude: %1$f</string>
+
+    <string name="provider">Provider: %1$s</string>
+    <string name="accuracy">Accuracy: %1$s</string>
+    <string name="altitude">Altitude: %1$s</string>
+    <string name="speed">Speed: %1$s</string>
+    <string name="time">Time: %1$s</string>
+
 </resources>
