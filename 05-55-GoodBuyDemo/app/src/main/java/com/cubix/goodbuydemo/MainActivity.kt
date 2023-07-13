@@ -27,7 +27,9 @@ class MainActivity : AppCompatActivity() {
                     binding.etEmail.text.toString(), binding.etPassword.text.toString()
 
                 ).addOnSuccessListener {
-                    startActivity(Intent(this@MainActivity, AdsScrollingActivity::class.java))
+                    startActivity(Intent(
+                        this@MainActivity,
+                        AdsScrollingActivity::class.java))
 
                 }.addOnFailureListener{
 
