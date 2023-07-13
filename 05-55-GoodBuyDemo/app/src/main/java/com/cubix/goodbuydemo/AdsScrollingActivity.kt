@@ -37,8 +37,13 @@ class AdsScrollingActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         binding.toolbarLayout.title = title
-        binding.fab.setOnClickListener { view ->
+
+        binding.fabAdd.setOnClickListener { view ->
             startActivity(Intent(this, CreateAdsActivity::class.java))
+        }
+
+        binding.fabSearch.setOnClickListener { view ->
+            startActivity(Intent(this, SearchActivity::class.java))
         }
 
         adsAdapter = AdsAdapter(
