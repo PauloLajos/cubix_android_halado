@@ -4,11 +4,19 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.ActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.RequiresApi
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.content.ContextCompat
 import com.cubix.firebaseforumdemo.data.PostData
 import com.cubix.firebaseforumdemo.databinding.ActivityCreatePostBinding
 import com.google.firebase.auth.FirebaseAuth
@@ -47,10 +55,26 @@ class CreatePostActivity : AppCompatActivity() {
         }
 
         binding.btnAttach.setOnClickListener {
-            startActivityForResult(
-                Intent(MediaStore.ACTION_IMAGE_CAPTURE),
-                CAMERA_REQUEST_CODE
-            )
+            openCamera()
+        }
+
+        requestNeededPermission()
+    }
+
+    private fun requestNeededPermission() {
+        if (ContextCompat.checkSelfPermission(this,
+                android.Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
+                    android.Manifest.permission.CAMERA)) {
+                Toast.makeText(this,
+                    "I need it for camera", Toast.LENGTH_SHORT).show()
+            }
+
+            ActivityCompat.requestPermissions(this,
+                arrayOf(android.Manifest.permission.CAMERA),
+                PERMISSION_REQUEST_CODE)
+        } else {
+            // we already have permission
         }
     }
 
@@ -99,15 +123,24 @@ class CreatePostActivity : AppCompatActivity() {
             }
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            val extras = intent.extras
-            uploadBitmap = extras!!["data"] as Bitmap
+    //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
+    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            result ->
 
+        if (result.resultCode == Activity.RESULT_OK){
+            val data: Intent? = result.data
+            uploadBitmap = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                data!!.extras!!.getParcelable("data",Bitmap::class.java)
+            else
+                data!!.extras!!.get("data") as Bitmap
             binding.imgAttach.setImageBitmap(uploadBitmap)
             binding.imgAttach.visibility = View.VISIBLE
         }
+    }
+
+    private fun openCamera() {
+        val intentPhoto = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        resultLauncher.launch(intentPhoto)
     }
 
     override fun onRequestPermissionsResult(

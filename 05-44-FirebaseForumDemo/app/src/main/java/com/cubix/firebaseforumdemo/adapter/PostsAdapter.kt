@@ -5,17 +5,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.cubix.firebaseforumdemo.data.PostData
 import com.cubix.firebaseforumdemo.databinding.PostRowBinding
 import com.google.firebase.firestore.FirebaseFirestore
 
 class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
-    lateinit var context: Context
-    var  postsList = mutableListOf<PostData>()
-    var  postKeys = mutableListOf<String>()
+    var context: Context
+    var postsList = mutableListOf<PostData>()
+    var postKeys = mutableListOf<String>()
 
-    lateinit var currentUid: String
+    var currentUid: String
 
     constructor(context: Context, uid: String) : super() {
         this.context = context
@@ -47,7 +48,7 @@ class PostsAdapter : RecyclerView.Adapter<PostsAdapter.ViewHolder> {
 
         if (post.imgUrl.isNotEmpty()){
             holder.ivPhoto.visibility = View.VISIBLE
-            //Glide.with(context).load(post.imgUrl).into(holder.ivPhoto)
+            Glide.with(context).load(post.imgUrl).into(holder.ivPhoto)
         } else {
             holder.ivPhoto.visibility = View.GONE
         }
