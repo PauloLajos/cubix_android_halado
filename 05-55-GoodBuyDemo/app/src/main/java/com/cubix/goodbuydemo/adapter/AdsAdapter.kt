@@ -4,17 +4,22 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Filter
+import android.widget.Filterable
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.cubix.goodbuydemo.data.AdsData
 import com.cubix.goodbuydemo.databinding.AdsRowBinding
 import com.google.firebase.firestore.FirebaseFirestore
+import java.util.Locale
 
-class AdsAdapter : RecyclerView.Adapter<AdsAdapter.ViewHolder> {
+class AdsAdapter : RecyclerView.Adapter<AdsAdapter.ViewHolder>, Filterable {
 
     var context: Context
     var adsList = mutableListOf<AdsData>()
     var adsKeys = mutableListOf<String>()
+
+    var adsFilterList = mutableListOf<AdsData>()
 
     var currentUid: String
 
@@ -91,5 +96,31 @@ class AdsAdapter : RecyclerView.Adapter<AdsAdapter.ViewHolder> {
         var tvBody = binding.tvBody
         var btnDelete = binding.btnDelete
         var ivPhoto = binding.ivPhoto
+    }
+
+    override fun getFilter(): Filter {
+        return object : Filter() {
+            override fun performFiltering(constraint: CharSequence?): FilterResults {
+                val charSearch = constraint.toString()
+                if (charSearch.isEmpty()) {
+                    adsFilterList = adsList
+                } else {
+                    val resultList = mutableListOf<AdsData>()
+                    for (row in adsList) {
+                        resultList.add(row)
+                    }
+                    adsFilterList = resultList
+                }
+                val filterResults = FilterResults()
+                filterResults.values = adsFilterList
+                return filterResults
+            }
+
+            @Suppress("UNCHECKED_CAST")
+            override fun publishResults(constraint: CharSequence?, results: FilterResults?) {
+                adsFilterList = results?.values as ArrayList<AdsData>
+                notifyDataSetChanged()
+            }
+        }
     }
 }
