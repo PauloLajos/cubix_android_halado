@@ -2,10 +2,8 @@ package com.cubix.goodbuydemo
 
 import android.content.Intent
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
-import com.google.android.material.appbar.CollapsingToolbarLayout
-import com.google.android.material.floatingactionbutton.FloatingActionButton
-import com.google.android.material.snackbar.Snackbar
 import androidx.appcompat.app.AppCompatActivity
 import com.cubix.goodbuydemo.adapter.AdsAdapter
 import com.cubix.goodbuydemo.data.AdsData
@@ -37,6 +35,11 @@ class AdsScrollingActivity : AppCompatActivity() {
 
         setSupportActionBar(findViewById(R.id.toolbar))
         binding.toolbarLayout.title = title
+
+        binding.fabExpand.setOnClickListener {
+            binding.fabAdd.visibility = if (binding.fabAdd.visibility === View.INVISIBLE) View.VISIBLE else View.INVISIBLE
+            binding.fabSearch.visibility = if (binding.fabSearch.visibility === View.INVISIBLE) View.VISIBLE else View.INVISIBLE
+        }
 
         binding.fabAdd.setOnClickListener { view ->
             startActivity(Intent(this, CreateAdsActivity::class.java))
