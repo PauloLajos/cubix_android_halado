@@ -10,6 +10,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import java.util.Locale
 
+
+/**
+ *
+ *
+ * https://johncodeos.com/how-to-add-search-in-recyclerview-using-kotlin/
+ *
+ */
+
 class MainActivity : AppCompatActivity() {
     lateinit var adapter: RecyclerViewAdapter
     private lateinit var countryRv: RecyclerView
