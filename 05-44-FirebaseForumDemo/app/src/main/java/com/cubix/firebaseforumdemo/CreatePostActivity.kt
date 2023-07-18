@@ -4,18 +4,14 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.MediaStore
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import com.cubix.firebaseforumdemo.data.PostData
 import com.cubix.firebaseforumdemo.databinding.ActivityCreatePostBinding
@@ -28,9 +24,9 @@ import java.util.UUID
 
 class CreatePostActivity : AppCompatActivity() {
     companion object {
-        final const val COLLECTION_POSTS = "posts"
-        final const val PERMISSION_REQUEST_CODE = 1001
-        final const val CAMERA_REQUEST_CODE = 1002
+        const val COLLECTION_POSTS = "posts"
+        const val PERMISSION_REQUEST_CODE = 1001
+        //const val CAMERA_REQUEST_CODE = 1002
     }
 
     lateinit var binding: ActivityCreatePostBinding
@@ -124,7 +120,10 @@ class CreatePostActivity : AppCompatActivity() {
     }
 
     //@RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    var resultLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+    private var resultLauncher = registerForActivityResult(
+        ActivityResultContracts
+            .StartActivityForResult()
+    ) {
             result ->
 
         if (result.resultCode == Activity.RESULT_OK){
