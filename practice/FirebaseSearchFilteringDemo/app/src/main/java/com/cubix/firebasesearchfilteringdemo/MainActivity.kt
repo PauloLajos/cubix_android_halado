@@ -12,7 +12,17 @@ import android.view.Menu
 import android.view.MenuItem
 import com.cubix.firebasesearchfilteringdemo.databinding.ActivityMainBinding
 
+/**
+ *
+ * https://www.section.io/engineering-education/custom-searching-and-filtering-in-firebase-database-in-android/
+ */
+
 class MainActivity : AppCompatActivity() {
+
+    companion object {
+        const val FIREBASE_PATH = "FireBaseSearchFilteringDemo/students/"
+        const val TAG = "FireBaseSearchFilteringDemo"
+    }
 
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var binding: ActivityMainBinding
