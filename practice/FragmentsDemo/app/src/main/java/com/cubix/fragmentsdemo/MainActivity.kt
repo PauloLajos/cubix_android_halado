@@ -26,7 +26,7 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.toolbar)
 
-        val navController = findNavController(R.id.nav_host_fragment_content_main)
+        //val navController = findNavController(R.id.nav_host_fragment_content_main)
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
 
@@ -35,6 +35,11 @@ class MainActivity : AppCompatActivity() {
                 .setAnchorView(R.id.fab)
                 .setAction("Action", null).show()
         }
+
+        supportFragmentManager
+            .beginTransaction()
+            .add(R.id.nav_host_fragment_content_main, FirstFragment::class.java, null)
+            .commit()
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
