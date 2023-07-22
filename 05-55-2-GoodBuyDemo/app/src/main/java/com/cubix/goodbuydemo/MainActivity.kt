@@ -6,6 +6,10 @@ import com.cubix.goodbuydemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    companion object {
+        const val FIREBASE_PATH = "GoodBuyDemo/ads/"
+    }
+
     private lateinit var mainBinding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {

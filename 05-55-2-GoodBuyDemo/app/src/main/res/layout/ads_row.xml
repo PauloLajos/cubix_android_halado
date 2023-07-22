@@ -13,7 +13,7 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Title"
@@ -21,7 +21,7 @@
 
         <TextView
             android:id="@+id/tvDetail"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Detail"
@@ -29,7 +29,7 @@
 
         <TextView
             android:id="@+id/tvPrice"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Price"
@@ -37,7 +37,7 @@
 
         <TextView
             android:id="@+id/tvContact"
-            android:layout_width="48dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="8dp"
             android:text="Contact"
