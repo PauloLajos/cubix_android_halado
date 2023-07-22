@@ -24,10 +24,6 @@ class FragmentList: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.detailsButton.setOnClickListener{
-            val mainActivity = activity as MainActivity
-            mainActivity.showFragmentAdd()
-        }
     }
 
     override fun onDestroyView() {
