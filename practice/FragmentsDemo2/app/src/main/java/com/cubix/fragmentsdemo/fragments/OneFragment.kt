@@ -42,6 +42,8 @@ class OneFragment : Fragment() {
 
         binding.btnGoTwoFragment.setOnClickListener {
             (activity as MainActivity).showFragment(R.id.fragment_container_view_program, TwoFragment(),tag = TwoFragment.TAG)
+
+            //findNavController().navigate(R.id.action_oneFragment_to_twoFragment)
         }
     }
 

@@ -2,15 +2,13 @@ package com.cubix.fragmentsdemo
 
 import android.os.Bundle
 import android.view.Menu
-import android.view.MenuInflater
 import android.view.MenuItem
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.os.bundleOf
-import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import com.cubix.fragmentsdemo.databinding.ActivityMainBinding
 import com.cubix.fragmentsdemo.fragments.OneFragment
+import com.google.android.material.snackbar.Snackbar
 
 class MainActivity : AppCompatActivity() {
 
@@ -24,8 +22,13 @@ class MainActivity : AppCompatActivity() {
         mainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(mainBinding.root)
 
-        showMenu()
-        mainBinding.toolbar.inflateMenu(R.menu.activity_menu)
+        setSupportActionBar(mainBinding.toolbar)
+
+        mainBinding.fab.setOnClickListener { view ->
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                .setAnchorView(R.id.fab)
+                .setAction("Action", null).show()
+        }
 
         if (savedInstanceState == null) {
             val bundle = bundleOf("some_int" to 1)
@@ -38,40 +41,37 @@ class MainActivity : AppCompatActivity() {
                 false
             )
         }
+
+
     }
 
-    private fun showMenu() {
-        addMenuProvider(object : MenuProvider {
-            override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
-                // Add menu items here
-                menuInflater.inflate(R.menu.activity_menu, menu)
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        menuInflater.inflate(R.menu.activity_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        return when (item.itemId) {
+            R.id.activitymenu_action_settings -> {
+                Snackbar.make(mainBinding.root, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAnchorView(R.id.fab)
+                    .setAction("Action", null).show()
+
+                true
             }
+            R.id.activitymenu_action_done -> {
+                Snackbar.make(mainBinding.root, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAnchorView(R.id.fab)
+                    .setAction("Action", null).show()
 
-            override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
-                // Handle the menu selection
-                return when (menuItem.itemId) {
-                    R.id.activitymenu_action_done -> {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Menu -Done- selected",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        true
-                    }
-
-                    R.id.activitymenu_action_settings -> {
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Menu -Settings- selected",
-                            Toast.LENGTH_SHORT
-                        ).show()
-                        true
-                    }
-
-                    else -> false
-                }
+                true
             }
-        })
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     fun showFragment(
@@ -81,6 +81,8 @@ class MainActivity : AppCompatActivity() {
         tag: String,
         replace: Boolean = true
     ) {
+        mainBinding.toolbar.title = fragment.javaClass.simpleName
+
         if (replace)
             supportFragmentManager
                 .beginTransaction()
