@@ -35,7 +35,7 @@ class TwoFragment : Fragment() {
             .append((activity as MainActivity).fragmentMessage)
 
         binding.btnGoOneFragment.setOnClickListener {
-            (activity as MainActivity).showFragment(R.id.fragment_container_view_program, OneFragment(), OneFragment.TAG)
+            (activity as MainActivity).showFragment(R.id.fragment_container_view_program, OneFragment(), tag = OneFragment.TAG)
         }
     }
 

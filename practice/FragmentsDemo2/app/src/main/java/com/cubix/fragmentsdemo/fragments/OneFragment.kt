@@ -30,12 +30,18 @@ class OneFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        val someInt: Int = try {
+            requireArguments().getInt("some_int",0)
+        } catch (e : Exception) {
+            -1
+        }
+
         binding.textView.text = StringBuilder()
-            .append("One fragment - ")
+            .append("One fragment - $someInt")
             .append((activity as MainActivity).fragmentMessage)
 
         binding.btnGoTwoFragment.setOnClickListener {
-            (activity as MainActivity).showFragment(R.id.fragment_container_view_program, TwoFragment(), TwoFragment.TAG)
+            (activity as MainActivity).showFragment(R.id.fragment_container_view_program, TwoFragment(),tag = TwoFragment.TAG)
         }
     }
 

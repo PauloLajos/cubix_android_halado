@@ -2,6 +2,7 @@ package com.cubix.fragmentsdemo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import com.cubix.fragmentsdemo.databinding.ActivityMainBinding
 import com.cubix.fragmentsdemo.fragments.OneFragment
@@ -19,13 +20,22 @@ class MainActivity : AppCompatActivity() {
         setContentView(mainBinding.root)
 
         if (savedInstanceState == null) {
-            showFragment(R.id.fragment_container_view_program, OneFragment(), OneFragment.TAG, false)
+            val bundle = bundleOf("some_int" to 1)
+
+            showFragment(
+                R.id.fragment_container_view_program,
+                OneFragment(),
+                bundle,
+                OneFragment.TAG,
+                false
+            )
         }
     }
 
     fun showFragment(
         containerViewId: Int,
         fragment: Fragment,
+        args: Bundle? = null,
         tag: String,
         replace: Boolean = true
     ) {
@@ -33,13 +43,13 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .replace(containerViewId, fragment, tag)
+                .replace(containerViewId, fragment::class.java, args, tag)
                 .commit()
         else
             supportFragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
-                .add(containerViewId, fragment, tag)
+                .add(containerViewId, fragment::class.java, args, tag)
                 .commit()
     }
 }
