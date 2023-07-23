@@ -43,6 +43,7 @@ class MainActivity : AppCompatActivity() {
             supportFragmentManager
                 .beginTransaction()
                 .setReorderingAllowed(true)
+                .setCustomAnimations(R.anim.fade_in,R.anim.fade_out)
                 .replace(containerViewId, fragment::class.java, args, tag)
                 .commit()
         else
