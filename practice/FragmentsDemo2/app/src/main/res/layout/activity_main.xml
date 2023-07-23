@@ -7,12 +7,31 @@
     tools:context=".MainActivity">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Hello World!"
+        android:textSize="16sp"
+        android:text="Main Activity - Hello World!"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Add a fragment via XML -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_xml"
+        android:name="com.cubix.fragmentsdemo.fragments.XmlFragment"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="8dp"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Add a fragment programmatically -->
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/fragment_container_view_program"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_margin="8dp"
+        app:layout_constraintBottom_toBottomOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
