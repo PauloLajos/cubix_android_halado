@@ -61,6 +61,7 @@ class LoginFragment: Fragment() {
         // insert user auth...
         return if (userName != "" && userPassword != "") {
             (activity as MainActivity).userName = userName
+
             true
         } else
             false
@@ -69,22 +70,27 @@ class LoginFragment: Fragment() {
     private fun isFormValid(etName: EditText, etPassword: EditText, tilPassword: TextInputLayout): Boolean {
         return when {
             etName.text.isEmpty() -> {
-                etName.error = "Name field can not be empty"
+                etName.error = getString(R.string.name_field_can_not_be_empty)
                 etName.requestFocus()
+
                 false
             }
             etPassword.text.isEmpty() -> {
-                etPassword.error = "The password can not be empty"
+                etPassword.error = getString(R.string.the_password_can_not_be_empty)
                 etPassword.requestFocus()
+                // the error and eye icon overlap
                 tilPassword.endIconMode = TextInputLayout.END_ICON_NONE
+
                 false
             }
+
             else -> true
         }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
+
         _binding = null
     }
 }
