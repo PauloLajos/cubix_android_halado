@@ -6,4 +6,6 @@
     <string name="logout">Logout</string>
     <string name="name_field_can_not_be_empty">Name field can not be empty</string>
     <string name="the_password_can_not_be_empty">The password can not be empty</string>
+    <string name="email">Email</string>
+    <string name="action_settings">Setting</string>
 </resources>

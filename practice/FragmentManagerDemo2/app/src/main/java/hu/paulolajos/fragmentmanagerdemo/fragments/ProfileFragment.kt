@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
+import com.google.android.material.snackbar.Snackbar
 import hu.paulolajos.fragmentmanagerdemo.MainActivity
 import hu.paulolajos.fragmentmanagerdemo.R
 import hu.paulolajos.fragmentmanagerdemo.databinding.FragmentProfileBinding
@@ -67,6 +68,24 @@ class ProfileFragment : Fragment() {
                             .build()
                     )
             }
+
+            binding.fab.setOnClickListener {
+                Snackbar.make(it, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show()
+            }
+
+            binding.toolbar.inflateMenu(R.menu.menu_profile)
+
+            binding.toolbar.setOnMenuItemClickListener {
+                when (it.itemId) {
+                    R.id.action_settings -> {
+                        // Navigate to settings screen.
+                        true
+                    }
+                    else -> false
+                }
+            }
+
         }
     }
 
