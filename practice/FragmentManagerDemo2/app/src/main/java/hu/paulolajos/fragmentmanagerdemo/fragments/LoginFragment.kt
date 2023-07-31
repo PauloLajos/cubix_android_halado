@@ -59,7 +59,7 @@ class LoginFragment: Fragment() {
 
     private fun userAuthenticate(userName: String, userPassword: String): Boolean {
         // insert user auth...
-        return if (userName != "" && userPassword != "") {
+        return if (userName.isNotBlank() && userPassword.isNotBlank()) {
             (activity as MainActivity).userName = userName
 
             true

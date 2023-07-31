@@ -2,8 +2,13 @@ package hu.paulolajos.fragmentmanagerdemo.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.Menu
+import android.view.MenuInflater
+import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.view.MenuHost
+import androidx.core.view.MenuProvider
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
@@ -74,18 +79,38 @@ class ProfileFragment : Fragment() {
                     .setAction("Action", null).show()
             }
 
-            binding.toolbar.inflateMenu(R.menu.menu_profile)
+            // The usage of an interface lets you inject your own implementation
+            val menuHost: MenuHost = requireActivity()
 
-            binding.toolbar.setOnMenuItemClickListener {
-                when (it.itemId) {
-                    R.id.action_settings -> {
-                        // Navigate to settings screen.
-                        true
-                    }
-                    else -> false
+            // Add menu items without using the Fragment Menu APIs
+            // Note how we can tie the MenuProvider to the viewLifecycleOwner
+            // and an optional Lifecycle.State (here, RESUMED) to indicate when
+            // the menu should be visible
+            menuHost.addMenuProvider(object : MenuProvider {
+                override fun onPrepareMenu(menu: Menu) {
+                    // Hide Exit menu item
+                    menu.findItem(R.id.action_exit).isVisible = false
                 }
-            }
 
+                override fun onCreateMenu(menu: Menu, menuInflater: MenuInflater) {
+                    // Add menu items here
+                    menuInflater.inflate(R.menu.menu_profile, menu)
+                }
+
+                override fun onMenuItemSelected(menuItem: MenuItem): Boolean {
+                    // Handle the menu selection
+                    return when (menuItem.itemId) {
+                        R.id.action_settings -> {
+                            // Navigate to settings screen.
+                            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                                .setAction("Action", null).show()
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+            }, viewLifecycleOwner)
         }
     }
 
