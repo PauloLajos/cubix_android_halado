@@ -1,7 +1,7 @@
 package hu.paulolajos.foregroundservice
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import hu.paulolajos.foregroundservice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -18,11 +18,15 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.btnStart.setOnClickListener {
+        // less binding :)
+        val btnStart = binding.btnStart
+        val btnStop = binding.btnStop
+
+        btnStart.setOnClickListener {
             ForegroundService.startService(this, "some string you want to pass into the service")
         }
 
-        binding.btnStop.setOnClickListener {
+        btnStop.setOnClickListener {
             ForegroundService.stopService(this)
         }
     }
