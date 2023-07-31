@@ -13,5 +13,13 @@ class MainActivity : AppCompatActivity() {
 
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        binding.btnStart.setOnClickListener {
+            ForegroundService.startService(this, "some string you want to pass into the service")
+        }
+
+        binding.btnStop.setOnClickListener {
+            ForegroundService.stopService(this)
+        }
     }
 }
