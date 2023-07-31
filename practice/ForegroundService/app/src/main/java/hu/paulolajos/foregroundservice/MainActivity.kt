@@ -6,6 +6,10 @@ import hu.paulolajos.foregroundservice.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
+    /**
+     * https://www.techyourchance.com/foreground-service-in-android/
+     */
+
     private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
