@@ -213,39 +213,6 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 prevNextSong(increment = false)
             }
         })
-
-        binding.interfaceRepeat.setOnClickListener {
-            if (!isRepeating) {
-                isRepeating = true
-                binding.interfaceRepeat.setImageResource(R.drawable.repeat_on)
-                binding.interfaceRepeat.setColorFilter(ContextCompat.getColor(this, R.color.green))
-            } else {
-                isRepeating = false
-                binding.interfaceRepeat.setImageResource(R.drawable.repeat)
-                binding.interfaceRepeat.setColorFilter(
-                    ContextCompat.getColor(
-                        this, R.color.music_icon_tint
-                    )
-                )
-            }
-        }
-
-        binding.interfaceShuffle.setOnClickListener {
-            if (!isShuffling) {
-                isShuffling = true
-                binding.interfaceShuffle.setImageResource(R.drawable.shuffle_fill)
-                binding.interfaceShuffle.setColorFilter(ContextCompat.getColor(this, R.color.green))
-
-            } else {
-                isShuffling = false
-                binding.interfaceShuffle.setImageResource(R.drawable.shuffle)
-                binding.interfaceShuffle.setColorFilter(
-                    ContextCompat.getColor(
-                        this, R.color.music_icon_tint
-                    )
-                )
-            }
-        }
     }
 
     private fun initActivity() {
@@ -253,20 +220,6 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         when (intent.getStringExtra("class")) {
             "MusicAdapter" -> {
                 initServiceAndPlaylist(MainActivity.songList, shuffle = false)
-            }
-
-            "PlaylistDetailsAdapter" -> {
-                initServiceAndPlaylist(
-                    PlaylistActivity.musicPlaylist.ref[PlaylistActivityDetails.currentPlaylistPos].playlist,
-                    shuffle = false
-                )
-            }
-
-            "PlaylistDetailsShuffle" -> {
-                initServiceAndPlaylist(
-                    PlaylistActivity.musicPlaylist.ref[PlaylistActivityDetails.currentPlaylistPos].playlist,
-                    shuffle = true
-                )
             }
 
             "Now playing" -> {
@@ -285,20 +238,15 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private fun setLayout() {
         try {
-            Glide.with(this).load(getImageArt(musicList[songPosition].path)).apply(
-                RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop()
-            ).into(binding.interfaceCover)
+            Glide.with(this)
+                .load(getImageArt(musicList[songPosition].path))
+                .apply(
+                    RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop()
+                )
+                .into(binding.interfaceCover)
 
             binding.interfaceSongName.text = musicList[songPosition].title
             binding.interfaceArtistName.text = musicList[songPosition].album
-            if (isRepeating) {
-                binding.interfaceRepeat.setImageResource(R.drawable.repeat_on)
-                binding.interfaceRepeat.setColorFilter(ContextCompat.getColor(this, R.color.green))
-            }
-            if (isShuffling) {
-                binding.interfaceShuffle.setColorFilter(ContextCompat.getColor(this, R.color.green))
-                binding.interfaceShuffle.setImageResource(R.drawable.shuffle_fill)
-            }
 
             val img = getImageArt(musicList[songPosition].path)
             val image = if (img != null) {
@@ -325,14 +273,20 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicService!!.mediaPlayer!!.reset()
             musicService!!.mediaPlayer!!.setDataSource(musicList[songPosition].path)
             musicService!!.mediaPlayer!!.prepare()
+
             binding.interfacePlay.setImageResource((R.drawable.pause))
+
             binding.interfaceSeekStart.text =
                 formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+
             binding.interfaceSeekEnd.text =
                 formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+
             binding.seekbar.progress = 0
             binding.seekbar.max = musicService!!.mediaPlayer!!.duration
+
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+
             playMusic()
 
         } catch (e: Exception) {
@@ -348,8 +302,10 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             )
             isPlaying = true
             musicService!!.mediaPlayer!!.start()
+
             binding.interfacePlay.setImageResource((R.drawable.pause))
             musicService!!.showNotification(R.drawable.pause_notification)
+
             NowPlayingFragment.binding.fragmentButton.setImageResource(R.drawable.pause_now)
         } catch (e: Exception) {
             return
@@ -361,8 +317,10 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicService!!.audioManager.abandonAudioFocus(musicService)
             isPlaying = false
             musicService!!.mediaPlayer!!.pause()
+
             binding.interfacePlay.setImageResource((R.drawable.play))
             musicService!!.showNotification(R.drawable.play_notification)
+
             NowPlayingFragment.binding.fragmentButton.setImageResource(R.drawable.play_now)
         } catch (e: Exception) {
             return
@@ -409,9 +367,11 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         //for refreshing now playing image & text on song completion
         NowPlayingFragment.binding.fragmentTitle.isSelected = true
+
         Glide.with(applicationContext).load(getImageArt(musicList[songPosition].path))
             .apply(RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop())
             .into(NowPlayingFragment.binding.fragmentImage)
+
         NowPlayingFragment.binding.fragmentTitle.text = musicList[songPosition].title
         NowPlayingFragment.binding.fragmentAlbumName.text = musicList[songPosition].title
 
@@ -421,8 +381,6 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == 3 || resultCode == RESULT_OK) return
-
-
     }
 
     @RequiresApi(Build.VERSION_CODES.Q)
@@ -433,9 +391,12 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             cursor = this.contentResolver.query(contentUri, projection, null, null, null)
             val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
             val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
+
             cursor!!.moveToFirst()
+
             val path = dataColumn?.let { cursor.getString(it) }
             val duration = durationColumn?.let { cursor.getLong(it) }!!
+
             return MusicClass(
                 id = "Unknown",
                 title = path.toString(),
@@ -463,6 +424,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
         binding.seekbar.progress = musicService!!.mediaPlayer!!.currentPosition
         binding.seekbar.max = musicService!!.mediaPlayer!!.duration
+
         if (isPlaying) {
             binding.interfacePlay.setImageResource((R.drawable.pause))
         } else {
@@ -474,6 +436,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         val dialog = BottomSheetDialog(this@MusicInterface)
         dialog.setContentView(R.layout.bottom_sheet_dialog)
         dialog.show()
+
         dialog.findViewById<LinearLayout>(R.id.min_15)?.setOnClickListener {
             Toast.makeText(baseContext, "Music will stop after 15 minutes", Toast.LENGTH_SHORT)
                 .show()
@@ -485,6 +448,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }.start()
             dialog.dismiss()
         }
+
         dialog.findViewById<LinearLayout>(R.id.min_30)?.setOnClickListener {
             Toast.makeText(baseContext, "Music will stop after 30 minutes", Toast.LENGTH_SHORT)
                 .show()
@@ -496,6 +460,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }.start()
             dialog.dismiss()
         }
+
         dialog.findViewById<LinearLayout>(R.id.min_60)?.setOnClickListener {
             Toast.makeText(baseContext, "Music will stop after 60 minutes", Toast.LENGTH_SHORT)
                 .show()
@@ -527,7 +492,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-    fun initServiceAndPlaylist(
+    private fun initServiceAndPlaylist(
         playlist: ArrayList<MusicClass>, shuffle: Boolean
     ) {
         val intent = Intent(this, MusicService::class.java)

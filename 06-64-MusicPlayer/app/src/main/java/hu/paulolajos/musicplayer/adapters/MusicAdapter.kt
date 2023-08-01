@@ -13,8 +13,6 @@ import com.google.android.material.snackbar.Snackbar
 import hu.paulolajos.musicplayer.R
 import hu.paulolajos.musicplayer.activities.MainActivity
 import hu.paulolajos.musicplayer.activities.MusicInterface
-import hu.paulolajos.musicplayer.activities.PlaylistActivity
-import hu.paulolajos.musicplayer.activities.PlaylistActivityDetails
 import hu.paulolajos.musicplayer.data.MusicClass
 import hu.paulolajos.musicplayer.data.formatDuration
 import hu.paulolajos.musicplayer.databinding.SingleLayoutBinding
@@ -84,20 +82,6 @@ class MusicAdapter(
                 }
             }
 
-            selectionActivity -> {
-                holder.root.setOnClickListener {
-                    if (addSong(musicList[position]))
-                        holder.root.setBackgroundResource(R.drawable.bg_selection)
-                    else
-                        holder.root.setBackgroundColor(
-                            ContextCompat.getColor(
-                                context,
-                                R.color.unSelectBG
-                            )
-                        )
-
-                }
-            }
             else -> {
                 holder.itemView.setOnClickListener {
                     if (MainActivity.isSearching)
@@ -125,31 +109,6 @@ class MusicAdapter(
     fun updateMusicList(searchList: ArrayList<MusicClass>) {
         musicList = ArrayList()
         musicList.addAll(searchList)
-        notifyDataSetChanged()
-    }
-
-    private fun addSong(song: MusicClass): Boolean {
-        PlaylistActivity
-            .musicPlaylist
-            .ref[PlaylistActivityDetails.currentPlaylistPos]
-            .playlist.forEachIndexed { index, music ->
-                if (song.id == music.id) {
-                    PlaylistActivity.musicPlaylist.ref[PlaylistActivityDetails.currentPlaylistPos].playlist.removeAt(
-                        index
-                    )
-                    return false
-                }
-            }
-        PlaylistActivity.musicPlaylist.ref[PlaylistActivityDetails.currentPlaylistPos].playlist.add(
-            song
-        )
-        return true
-    }
-
-    fun refreshPlaylist() {
-        musicList = ArrayList()
-        musicList =
-            PlaylistActivity.musicPlaylist.ref[PlaylistActivityDetails.currentPlaylistPos].playlist
         notifyDataSetChanged()
     }
 }

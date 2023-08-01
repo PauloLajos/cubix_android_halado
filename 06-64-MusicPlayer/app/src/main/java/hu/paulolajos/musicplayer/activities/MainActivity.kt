@@ -38,6 +38,7 @@ class MainActivity : AppCompatActivity() {
 
         @SuppressLint("StaticFieldLeak")
         lateinit var binding: ActivityMainBinding
+
         var sortOrder: Int = 0
         val sortingList = arrayOf(
             MediaStore.Audio.Media.TITLE,
@@ -56,12 +57,12 @@ class MainActivity : AppCompatActivity() {
 
         if (requestRuntimePermission()) {
             init()
-            PlaylistActivity.musicPlaylist = MusicPlaylist()
+            //PlaylistActivity.musicPlaylist = MusicPlaylist()
 
         }
 
 
-//for nav drawer
+        //for nav drawer
         toggle = ActionBarDrawerToggle(this, binding.root, R.string.open, R.string.close)
         binding.root.addDrawerListener(toggle)
         toggle.syncState()

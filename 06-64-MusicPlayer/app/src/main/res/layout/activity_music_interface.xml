@@ -119,24 +119,6 @@
         android:theme="@style/Theme.MusicPlayer.IconFillColor">
 
         <ImageButton
-            android:id="@+id/interfaceShuffle"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/shuffle"
-            android:src="@drawable/shuffle" />
-
-        <ImageButton
-            android:id="@+id/interfaceRepeat"
-            style="?android:attr/buttonBarButtonStyle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:contentDescription="@string/repeat"
-            android:src="@drawable/repeat" />
-
-        <ImageButton
             android:id="@+id/interfaceTimer"
             style="?android:attr/buttonBarButtonStyle"
             android:layout_width="0dp"

@@ -27,14 +27,14 @@ class NowPlayingFragment : Fragment() {
         //const val TAG = "NowPlayingFragment"
 
         @SuppressLint("StaticFieldLeak")
-        private var _binding: FragmentNowPlayingBinding? = null
-        val binding get() = _binding!!
+        lateinit var binding: FragmentNowPlayingBinding
+
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-        _binding = FragmentNowPlayingBinding.inflate(layoutInflater, container, false)
+        binding = FragmentNowPlayingBinding.inflate(layoutInflater, container, false)
         binding.root.visibility = View.GONE
 
         binding.fragmentButton.setOnClickListener {
@@ -74,7 +74,8 @@ class NowPlayingFragment : Fragment() {
                 .load(getImageArt(MusicInterface.musicList[MusicInterface.songPosition].path))
                 .apply(
                     RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop()
-                ).into(binding.fragmentImage)
+                )
+                .into(binding.fragmentImage)
             binding.fragmentTitle.text =
                 MusicInterface.musicList[MusicInterface.songPosition].title
             binding.fragmentAlbumName.text =

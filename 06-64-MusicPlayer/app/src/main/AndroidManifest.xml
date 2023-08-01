@@ -41,12 +41,6 @@
             android:name=".activities.SelectionActivity"
             android:exported="false" />
         <activity
-            android:name=".activities.PlaylistActivityDetails"
-            android:exported="false" />
-        <activity
-            android:name=".activities.PlaylistActivity"
-            android:exported="false" />
-        <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>

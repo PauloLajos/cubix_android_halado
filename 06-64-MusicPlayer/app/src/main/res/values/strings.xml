@@ -8,8 +8,6 @@
     <string name="now_playing">Now playing</string>
     <string name="artistname">ArtistName</string>
     <string name="_00_00">00:00</string>
-    <string name="shuffle">Shuffle</string>
-    <string name="repeat">Repeat</string>
     <string name="timer">Timer</string>
     <string name="equalizer">Equalizer</string>
     <string name="share">Share</string>
@@ -18,15 +16,6 @@
     <string name="next">Next</string>
     <string name="hold_you">Hold you</string>
     <string name="duration">04:32</string>
-    <string name="playlists">Playlists</string>
-    <string name="playlist_name">Playlist name</string>
-    <string name="playlistname">Playlistname</string>
-    <string name="createdby">Created by</string>
-    <string name="created_on">Created on</string>
-    <string name="total_songs">Total songs</string>
-    <string name="add">Add</string>
-    <string name="liked_songs">Liked songs</string>
-    <string name="remove_all">Remove  all</string>
     <string name="open">Open</string>
     <string name="close">Close</string>
     <string name="_15_minutes">15 minutes</string>
