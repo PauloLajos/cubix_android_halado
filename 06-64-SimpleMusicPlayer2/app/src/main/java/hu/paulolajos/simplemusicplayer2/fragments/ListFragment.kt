@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.transition.TransitionInflater
 import hu.paulolajos.simplemusicplayer2.R
 import hu.paulolajos.simplemusicplayer2.databinding.FragmentListBinding
@@ -35,5 +36,8 @@ class ListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.btnPlay.setOnClickListener {
+            findNavController().navigate(R.id.playFragment)
+        }
     }
 }

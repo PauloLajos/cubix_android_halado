@@ -24,7 +24,7 @@
             tools:text="List Fragment" />
 
         <TextView
-            android:id="@+id/tvUserName"
+            android:id="@+id/tvSongTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -32,18 +32,18 @@
             app:layout_constraintHorizontal_bias="0.498"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tvFragment"
-            tools:text="TextView" />
+            tools:text="Song title" />
 
         <Button
-            android:id="@+id/btnExample"
+            android:id="@+id/btnPlay"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|center_horizontal"
             android:layout_marginTop="16dp"
-            android:text="Example"
+            android:text="Play"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tvUserName" />
+            app:layout_constraintTop_toBottomOf="@+id/tvSongTitle" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.appcompat.widget.Toolbar
