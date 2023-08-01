@@ -23,7 +23,7 @@ import hu.paulolajos.musicplayer.data.formatDuration
 import hu.paulolajos.musicplayer.data.getImageArt
 import hu.paulolajos.musicplayer.receiver.MusicBroadcastReceiver
 import hu.paulolajos.musicplayer.utils.ApplicationClass
-import hu.paulolajos.musicplayer.utils.NowPlayingFragment
+import hu.paulolajos.musicplayer.fragments.NowPlayingFragment
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 

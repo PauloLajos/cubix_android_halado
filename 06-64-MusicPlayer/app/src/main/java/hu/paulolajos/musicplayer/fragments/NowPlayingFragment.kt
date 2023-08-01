@@ -1,4 +1,4 @@
-package hu.paulolajos.musicplayer.utils
+package hu.paulolajos.musicplayer.fragments
 
 import android.annotation.SuppressLint
 import android.content.ContentValues
@@ -18,6 +18,7 @@ import hu.paulolajos.musicplayer.activities.MusicInterface
 import hu.paulolajos.musicplayer.data.getImageArt
 import hu.paulolajos.musicplayer.data.setSongPosition
 import hu.paulolajos.musicplayer.databinding.FragmentNowPlayingBinding
+import hu.paulolajos.musicplayer.utils.OnSwipeTouchListener
 
 
 class NowPlayingFragment : Fragment() {

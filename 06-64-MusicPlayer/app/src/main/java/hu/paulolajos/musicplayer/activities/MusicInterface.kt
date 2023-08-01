@@ -38,7 +38,7 @@ import hu.paulolajos.musicplayer.data.getMainColor
 import hu.paulolajos.musicplayer.data.setSongPosition
 import hu.paulolajos.musicplayer.databinding.ActivityMusicInterfaceBinding
 import hu.paulolajos.musicplayer.service.MusicService
-import hu.paulolajos.musicplayer.utils.NowPlayingFragment
+import hu.paulolajos.musicplayer.fragments.NowPlayingFragment
 import hu.paulolajos.musicplayer.utils.OnSwipeTouchListener
 
 class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
@@ -127,7 +127,7 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
             shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicList[songPosition].path))
-            startActivity(Intent.createChooser(shareIntent, "Sharing Music File!!"))
+            startActivity(Intent.createChooser(shareIntent, "Sharing Music File"))
 
         }
 

@@ -13,7 +13,7 @@ import hu.paulolajos.musicplayer.data.exitApplicationNotification
 import hu.paulolajos.musicplayer.data.getImageArt
 import hu.paulolajos.musicplayer.data.setSongPosition
 import hu.paulolajos.musicplayer.utils.ApplicationClass
-import hu.paulolajos.musicplayer.utils.NowPlayingFragment
+import hu.paulolajos.musicplayer.fragments.NowPlayingFragment
 
 class MusicBroadcastReceiver : BroadcastReceiver() {
 

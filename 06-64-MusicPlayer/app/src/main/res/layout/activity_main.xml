@@ -68,7 +68,7 @@
 
             <androidx.fragment.app.FragmentContainerView
                 android:id="@+id/nowPlaying"
-                android:name="hu.paulolajos.musicplayer.utils.NowPlayingFragment"
+                android:name="hu.paulolajos.musicplayer.fragments.NowPlayingFragment"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_margin="10dp"
