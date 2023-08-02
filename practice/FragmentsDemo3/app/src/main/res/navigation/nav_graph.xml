@@ -18,6 +18,9 @@
         android:name="hu.paulolajos.fragmentsdemo3.WordListFragment"
         android:label="@string/word_list_fragment_label"
         tools:layout="@layout/fragment_word_list">
-        <argument android:name="letter" />
+        <argument
+            android:name="letter"
+            app:argType="string"
+            android:defaultValue="A" />
     </fragment>
 </navigation>

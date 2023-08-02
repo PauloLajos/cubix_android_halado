@@ -3,14 +3,12 @@ package hu.paulolajos.fragmentsdemo3
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.accessibility.AccessibilityNodeInfo
-import android.widget.Button
-import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
+import hu.paulolajos.fragmentsdemo3.databinding.ItemViewBinding
 
 class WordAdapter(private val letterId: String, context: Context) :
     RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
@@ -34,9 +32,7 @@ class WordAdapter(private val letterId: String, context: Context) :
             .sorted()
     }
 
-    class WordViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        val button = view.findViewById<Button>(R.id.button_item)
-    }
+    inner class WordViewHolder(val binding: ItemViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun getItemCount(): Int = filteredWords.size
 
@@ -44,14 +40,9 @@ class WordAdapter(private val letterId: String, context: Context) :
      * Creates new views with R.layout.item_view as its template
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
-        val layout = LayoutInflater
-            .from(parent.context)
-            .inflate(R.layout.item_view, parent, false)
+        val binding = ItemViewBinding.inflate(LayoutInflater.from(parent.context), parent, false)
 
-        // Setup custom accessibility delegate to set the text read
-        layout.accessibilityDelegate = Accessibility
-
-        return WordViewHolder(layout)
+        return WordViewHolder(binding)
     }
 
     /**
@@ -60,17 +51,15 @@ class WordAdapter(private val letterId: String, context: Context) :
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
 
         val item = filteredWords[position]
-        // Needed to call startActivity
-        val context = holder.view.context
 
         // Set the text of the WordViewHolder
-        holder.button.text = item
+        holder.binding.buttonItem.text = item
 
         // Assigns a [OnClickListener] to the button contained in the [ViewHolder]
-        holder.button.setOnClickListener {
+        holder.binding.buttonItem.setOnClickListener {
             val queryUrl: Uri = Uri.parse("${WordListFragment.SEARCH_PREFIX}${item}")
             val intent = Intent(Intent.ACTION_VIEW, queryUrl)
-            context.startActivity(intent)
+            holder.itemView.context.startActivity(intent)
         }
     }
 
