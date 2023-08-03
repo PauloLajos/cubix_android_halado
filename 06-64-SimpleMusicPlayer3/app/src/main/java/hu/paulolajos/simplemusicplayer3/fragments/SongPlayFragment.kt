@@ -5,6 +5,7 @@ import android.media.AudioManager
 import android.media.MediaPlayer
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -42,7 +43,7 @@ class SongPlayFragment : Fragment() {
     private var playPause: Boolean = false
 
     // seekbar update
-    val seekbarUpdateHandler = Handler()
+    val seekbarUpdateHandler = Handler(Looper.getMainLooper())
     private val updateSeekbar: Runnable = object : Runnable {
         override fun run() {
             binding.seekbar.progress = mediaPlayer!!.currentPosition
@@ -176,7 +177,7 @@ class SongPlayFragment : Fragment() {
         } else mediaPlayer!!.start()
 
         // seekbar update start
-        seekbarUpdateHandler.postDelayed(updateSeekbar, 0);
+        seekbarUpdateHandler.postDelayed(updateSeekbar, 0)
 
         // play button change to pause
         binding.interfacePlay.setImageResource(R.drawable.pause)
