@@ -28,11 +28,15 @@ import hu.paulolajos.musicplayer.fragments.NowPlayingFragment
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     private var myBinder = MyBinder()
+
     var mediaPlayer: MediaPlayer? = null
+
     private lateinit var mediaSession: MediaSessionCompat
     private lateinit var runnable: Runnable
     lateinit var audioManager: AudioManager
+
     val broadcastReceiver: MusicBroadcastReceiver = MusicBroadcastReceiver()
+
     companion object {
         lateinit var playPendingIntent: PendingIntent
     }
@@ -235,7 +239,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             Handler(Looper.getMainLooper()).postDelayed(runnable, 200)
         }
         Handler(Looper.getMainLooper()).postDelayed(runnable, 0)
-
     }
 
     override fun onAudioFocusChange(focusChange: Int) {
@@ -255,7 +258,5 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             NowPlayingFragment.binding.fragmentButton.setImageResource(R.drawable.pause_now)
             showNotification(R.drawable.pause_notification)
         }
-
     }
-
 }

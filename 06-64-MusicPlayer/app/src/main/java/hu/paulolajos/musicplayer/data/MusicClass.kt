@@ -1,5 +1,6 @@
 package hu.paulolajos.musicplayer.data
 
+import android.app.Service.STOP_FOREGROUND_DETACH
 import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -12,27 +13,15 @@ import kotlin.math.roundToInt
 import kotlin.random.Random
 import kotlin.system.exitProcess
 
-data class MusicClass(val id: String,
-                      val title: String,
-                      val album: String,
-                      val length: Long = 0,
-                      val artist: String,
-                      val path: String,
-                      val artUri: String
+data class MusicClass(
+    val id: String,
+    val title: String,
+    val album: String,
+    val length: Long = 0,
+    val artist: String,
+    val path: String,
+    val artUri: String
 )
-
-class Playlist {
-    lateinit var name: String
-    lateinit var playlist: ArrayList<MusicClass>
-    lateinit var createdBy: String
-    lateinit var createdOn: String
-}
-
-class MusicPlaylist {
-    var ref: ArrayList<Playlist> = ArrayList()
-}
-
-val usedNumber = mutableSetOf<Int>()
 
 fun formatDuration(duration: Long): String {
     val minutes = TimeUnit.MINUTES.convert(duration, TimeUnit.MILLISECONDS)
@@ -51,7 +40,7 @@ fun getImageArt(path: String): ByteArray? {
 fun exitApplication() {
     if (MusicInterface.musicService != null) {
         MusicInterface.musicService!!.audioManager.abandonAudioFocus(MusicInterface.musicService)
-        MusicInterface.musicService!!.stopForeground(true)
+        MusicInterface.musicService!!.stopForeground(STOP_FOREGROUND_DETACH)
         MusicInterface.musicService!!.mediaPlayer!!.release()
         MusicInterface.musicService = null
     }
@@ -63,62 +52,21 @@ fun exitApplicationNotification() {
         val musicInterface = MusicInterface()
         musicInterface.pauseMusic()
     }
-    MusicInterface.musicService!!.stopForeground(true)
-}
-
-fun checkPlaylist(playlist: ArrayList<MusicClass>): ArrayList<MusicClass> {
-    playlist.forEachIndexed { index, music ->
-        val file = File(music.path)
-        if (!file.exists())
-            playlist.removeAt(index)
-    }
-    return playlist
+    MusicInterface.musicService!!.stopForeground(STOP_FOREGROUND_DETACH)
 }
 
 fun setSongPosition(increment: Boolean) {
     if (!MusicInterface.isRepeating) {
         if (increment) {
-            if (MusicInterface.isShuffling && MusicInterface.counter == 0) {
-                shuffleSongs()
-            } else {
-                if (MusicInterface.musicList.size - 1 == MusicInterface.songPosition) {
-                    MusicInterface.songPosition = 0
-                } else ++MusicInterface.songPosition
-            }
+            if (MusicInterface.musicList.size - 1 == MusicInterface.songPosition) {
+                MusicInterface.songPosition = 0
+            } else ++MusicInterface.songPosition
         } else {
             if (0 == MusicInterface.songPosition) MusicInterface.songPosition =
                 MusicInterface.musicList.size - 1
             else --MusicInterface.songPosition
         }
     }
-}
-
-fun checkIfListIsFull(list: MutableSet<Int>) {
-    if (list.size == MusicInterface.musicList.size) {
-        list.clear()
-    }
-}
-
-fun shuffleSongs() {
-    var newSong: Int = MusicInterface.songPosition
-    checkIfListIsFull(usedNumber)
-    Log.d(ContentValues.TAG, "shuffleSongs: " + usedNumber.size)
-    while (newSong == MusicInterface.songPosition) {
-        newSong = getRandomNumber(MusicInterface.musicList.size)
-    }
-    MusicInterface.songPosition = newSong
-}
-
-fun getRandomNumber(max: Int): Int {
-    val random = Random
-    var number = random.nextInt(max + 1)
-
-    while (usedNumber.contains(number)) {
-        number = random.nextInt(max + 1)
-    }
-
-    usedNumber.add(number)
-    return number
 }
 
 fun getMainColor(img: Bitmap): Int {

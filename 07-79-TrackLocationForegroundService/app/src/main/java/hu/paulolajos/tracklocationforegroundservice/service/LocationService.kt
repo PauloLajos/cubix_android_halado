@@ -4,7 +4,9 @@ import android.Manifest
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.app.Service
+import android.app.TaskStackBuilder
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -20,6 +22,7 @@ import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
+import hu.paulolajos.tracklocationforegroundservice.MainActivity
 import hu.paulolajos.tracklocationforegroundservice.receiver.RestartBackgroundService
 import java.util.Timer
 import java.util.TimerTask
@@ -46,28 +49,51 @@ class LocationService : Service() {
         )
         chan.lightColor = Color.BLUE
         chan.lockscreenVisibility = Notification.VISIBILITY_PRIVATE
+
         val manager =
             (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager)
         manager.createNotificationChannel(chan)
+
+        // Create an Intent for the activity you want to start
+        val resultIntent = Intent(this, MainActivity::class.java)
+        // Create the TaskStackBuilder
+        val resultPendingIntent: PendingIntent? = TaskStackBuilder.create(this).run {
+            // Add the intent, which inflates the back stack
+            addNextIntentWithParentStack(resultIntent)
+            // Get the PendingIntent containing the entire back stack
+            getPendingIntent(
+                0,
+                PendingIntent.FLAG_UPDATE_CURRENT or PendingIntent.FLAG_IMMUTABLE
+            )
+        }
+
         val notificationBuilder =
             NotificationCompat.Builder(this, NOTIFICATION_CHANNEL_ID)
+                .apply {
+                    setContentIntent(resultPendingIntent)
+                }
+
         val notification: Notification = notificationBuilder.setOngoing(true)
             .setContentTitle("App is running count::$counter")
             .setPriority(NotificationManager.IMPORTANCE_MIN)
             .setCategory(Notification.CATEGORY_SERVICE)
             .build()
+
         startForeground(2, notification)
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
+
         startTimer()
         return START_STICKY
     }
 
     override fun onDestroy() {
         super.onDestroy()
+
         stopTimerTask()
+
         val broadcastIntent = Intent()
         broadcastIntent.action = "restartservice"
         broadcastIntent.setClass(this, RestartBackgroundService::class.java)
@@ -145,7 +171,7 @@ class LocationService : Service() {
             // received, store the location in Firebase
             client.requestLocationUpdates(request, object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {
-                    val location: Location? = locationResult.getLastLocation()
+                    val location: Location? = locationResult.lastLocation
                     if (location != null) {
                         latitude = location.latitude
                         longitude = location.longitude

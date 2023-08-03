@@ -57,7 +57,8 @@ class MusicBroadcastReceiver : BroadcastReceiver() {
                 .load(getImageArt(MusicInterface.musicList[MusicInterface.songPosition].path))
                 .apply(
                     RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop()
-                ).into(MusicInterface.binding.interfaceCover)
+                )
+                .into(MusicInterface.binding.interfaceCover)
 
             MusicInterface.binding.interfaceSongName.text =
                 MusicInterface.musicList[MusicInterface.songPosition].title
@@ -67,7 +68,8 @@ class MusicBroadcastReceiver : BroadcastReceiver() {
                 .load(getImageArt(MusicInterface.musicList[MusicInterface.songPosition].path))
                 .apply(
                     RequestOptions().placeholder(R.drawable.image_as_cover).centerCrop()
-                ).into(NowPlayingFragment.binding.fragmentImage)
+                )
+                .into(NowPlayingFragment.binding.fragmentImage)
             NowPlayingFragment.binding.fragmentTitle.text =
                 MusicInterface.musicList[MusicInterface.songPosition].title
             NowPlayingFragment.binding.fragmentAlbumName.text =
@@ -86,6 +88,5 @@ class MusicBroadcastReceiver : BroadcastReceiver() {
         MusicInterface.musicService!!.mediaPlayer!!.pause()
         MusicInterface.musicService!!.showNotification(R.drawable.play_notification)
         NowPlayingFragment.binding.fragmentButton.setImageResource(R.drawable.play_now)
-
     }
 }
