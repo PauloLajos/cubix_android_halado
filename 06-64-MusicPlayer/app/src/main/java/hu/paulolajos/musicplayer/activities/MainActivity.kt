@@ -17,7 +17,6 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import hu.paulolajos.musicplayer.R
 import hu.paulolajos.musicplayer.adapters.MusicAdapter
 import hu.paulolajos.musicplayer.data.MusicClass
-import hu.paulolajos.musicplayer.data.MusicPlaylist
 import hu.paulolajos.musicplayer.data.exitApplication
 import hu.paulolajos.musicplayer.databinding.ActivityMainBinding
 import hu.paulolajos.musicplayer.receiver.MusicBroadcastReceiver
@@ -25,8 +24,12 @@ import java.io.File
 
 class MainActivity : AppCompatActivity() {
 
+    lateinit var binding: ActivityMainBinding
+
     lateinit var musicAdapter: MusicAdapter
+
     private lateinit var toggle: ActionBarDrawerToggle
+
     private val myBroadcastReceiver = MusicBroadcastReceiver()
 
     companion object {
@@ -36,8 +39,10 @@ class MainActivity : AppCompatActivity() {
         var isSearching: Boolean = false
         //var playNextList: ArrayList<MusicClass> = ArrayList()
 
+        /**
         @SuppressLint("StaticFieldLeak")
         lateinit var binding: ActivityMainBinding
+        */
 
         var sortOrder: Int = 0
         val sortingList = arrayOf(
@@ -285,6 +290,5 @@ class MainActivity : AppCompatActivity() {
         if (toggle.onOptionsItemSelected(item))
             return true
         return super.onOptionsItemSelected(item)
-
     }
 }

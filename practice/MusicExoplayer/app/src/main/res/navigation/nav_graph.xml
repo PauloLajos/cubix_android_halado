@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/playFragment">
+
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="hu.paulolajos.musicexoplayer.fragments.ListFragment"
+        android:label="ListFragment"
+        tools:layout="@layout/fragment_list" />
+    <fragment
+        android:id="@+id/playFragment"
+        android:name="hu.paulolajos.musicexoplayer.fragments.PlayFragment"
+        android:label="PlayFragment"
+        tools:layout="@layout/fragment_play"/>
+
+</navigation>

@@ -90,7 +90,8 @@ class MusicInterface : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
 
         binding.backButton.setOnClickListener {
-            finish()
+            //finish()
+            exitApplication()
         }
 
         binding.interfaceNext.setOnClickListener {

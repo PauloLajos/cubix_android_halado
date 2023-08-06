@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Simple Music Player 3</string>
+    <string name="detail_prefix">Songs That Start With</string>
+    <string name="action_switch_layout">Switch Layout</string>
+    <string name="look_up_word">Look up song in a Browser Search</string>
+    <string name="look_up_words">Show Stored Songs</string>
+    <string name="song_play_fragment_label">Songs That Start With {song}</string>
 </resources>

@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/songListFragment">
+
+    <fragment
+        android:id="@+id/songListFragment"
+        android:name="hu.paulolajos.simplemusicplayer3.fragments.SongListFragment"
+        android:label="@string/app_name">
+        <action
+            android:id="@+id/action_songListFragment_to_songPlayFragment"
+            app:destination="@id/songPlayFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/songPlayFragment"
+        android:name="hu.paulolajos.simplemusicplayer3.fragments.SongPlayFragment"
+        android:label="@string/song_play_fragment_label"
+        tools:layout="@layout/fragment_song_play">
+        <argument
+            android:name="song"
+            app:argType="string"
+            android:defaultValue="ATB - Hold you" />
+        <argument
+            android:name="resId"
+            app:argType="integer" />
+    </fragment>
+</navigation>
