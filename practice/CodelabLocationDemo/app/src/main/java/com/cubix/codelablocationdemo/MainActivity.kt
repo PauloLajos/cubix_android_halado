@@ -23,6 +23,13 @@ import com.google.android.material.snackbar.Snackbar
 import android.Manifest
 import android.os.Build
 
+/**
+ *
+ * https://codelabs.developers.google.com/codelabs/while-in-use-location
+ *
+ *
+ */
+
 private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
 
@@ -71,13 +78,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
         foregroundOnlyLocationButton.setOnClickListener {
             val enabled = sharedPreferences.getBoolean(
-                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+            )
 
             if (enabled) {
                 foregroundOnlyLocationService?.unsubscribeToLocationUpdates()
             } else {
 
-                // TODO: Step 1.0, Review Permissions: Checks and requests if needed.
+                // Review Permissions: Checks and requests if needed.
                 if (foregroundPermissionApproved()) {
                     foregroundOnlyLocationService?.subscribeToLocationUpdates()
                         ?: Log.d(TAG, "Service Not Bound")
@@ -105,7 +113,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         LocalBroadcastManager.getInstance(this).registerReceiver(
             foregroundOnlyBroadcastReceiver,
             IntentFilter(
-                ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST)
+                ForegroundOnlyLocationService.ACTION_FOREGROUND_ONLY_LOCATION_BROADCAST
+            )
         )
     }
 
@@ -129,13 +138,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onSharedPreferenceChanged(sharedPreferences: SharedPreferences, key: String) {
         // Updates button states if new while in use location is added to SharedPreferences.
         if (key == SharedPreferenceUtil.KEY_FOREGROUND_ENABLED) {
-            updateButtonState(sharedPreferences.getBoolean(
-                SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false)
+            updateButtonState(
+                sharedPreferences.getBoolean(
+                    SharedPreferenceUtil.KEY_FOREGROUND_ENABLED, false
+                )
             )
         }
     }
 
-    // TODO: Step 1.0, Review Permissions: Method checks if permissions approved.
+    // Review Permissions: Method checks if permissions approved.
     private fun foregroundPermissionApproved(): Boolean {
         return PackageManager.PERMISSION_GRANTED == ActivityCompat.checkSelfPermission(
             this,
@@ -143,7 +154,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         )
     }
 
-    // TODO: Step 1.0, Review Permissions: Method requests permissions.
+    // Review Permissions: Method requests permissions.
     private fun requestForegroundPermissions() {
         val provideRationale = foregroundPermissionApproved()
 
@@ -159,7 +170,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
                     // Request permission
                     ActivityCompat.requestPermissions(
                         this@MainActivity,
-                        arrayOf(Manifest.permission.ACCESS_FINE_LOCATION),
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                                Manifest.permission.POST_NOTIFICATIONS
+                            )
+                        else
+                            arrayOf(
+                                Manifest.permission.ACCESS_FINE_LOCATION,
+                            ),
                         REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE
                     )
                 }
@@ -174,7 +193,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         }
     }
 
-    // TODO: Step 1.0, Review Permissions: Handles permission result.
+    // Review Permissions: Handles permission result.
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<String>,
@@ -225,9 +244,11 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun updateButtonState(trackingLocation: Boolean) {
         if (trackingLocation) {
-            foregroundOnlyLocationButton.text = getString(R.string.stop_location_updates_button_text)
+            foregroundOnlyLocationButton.text =
+                getString(R.string.stop_location_updates_button_text)
         } else {
-            foregroundOnlyLocationButton.text = getString(R.string.start_location_updates_button_text)
+            foregroundOnlyLocationButton.text =
+                getString(R.string.start_location_updates_button_text)
         }
     }
 
