@@ -4,10 +4,12 @@ import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.ComponentName
 import android.content.Context
-import android.os.Build
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AppCompatActivity
+import androidx.work.Constraints
+import androidx.work.NetworkType
+import androidx.work.OneTimeWorkRequest
+import androidx.work.WorkManager
 import com.cubix.jobschedulerworkerdemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -25,6 +27,24 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnJobSchedulerStop.setOnClickListener {
             jobScheduler.cancel(jobId)
+        }
+
+        binding.btnWorkerStart.setOnClickListener {
+            val constraints = Constraints.Builder()
+                //.setRequiresCharging(true)
+                .setRequiredNetworkType(NetworkType.CONNECTED)
+                .build()
+            val workRequest =
+                OneTimeWorkRequest.Builder(MyWorker::class.java).
+                setConstraints(constraints).build()
+            WorkManager.getInstance().enqueue(workRequest)
+
+            /*val workRequest = androidx.work.PeriodicWorkRequest.Builder(
+                    MyWorker::class.java, PeriodicWorkRequest.MIN_PERIODIC_FLEX_MILLIS,
+                    TimeUnit.MILLISECONDS).setConstraints(constraints).build()
+            WorkManager.getInstance().enqueueUniquePeriodicWork(
+                    "demorepeate", ExistingPeriodicWorkPolicy.REPLACE, workRequest
+            )*/
         }
     }
 
