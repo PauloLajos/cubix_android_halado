@@ -9,7 +9,7 @@ import androidx.core.content.edit
  */
 fun Location?.toText(): String {
     return if (this != null) {
-        "($latitude, $longitude)"
+        "$latitude, $longitude"
     } else {
         "Unknown location"
     }

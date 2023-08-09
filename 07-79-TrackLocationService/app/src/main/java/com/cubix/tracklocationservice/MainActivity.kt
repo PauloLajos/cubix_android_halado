@@ -35,6 +35,10 @@ import com.cubix.tracklocationservice.fragments.LocationViewModel
 import com.cubix.tracklocationservice.fragments.MapsViewModel
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import java.lang.StringBuilder
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
@@ -328,7 +332,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     }
 
     private fun logResultsToScreen(location: Location) {
-        val output = "Foreground location: ${location.toText()}"
+        val output = StringBuilder()
+            .append(SimpleDateFormat( "yy.MM.dd. HH:mm:ss", Locale.ROOT )
+                .format(
+                    Date(System.currentTimeMillis())
+                )
+            )
+            .append(" - ${location.toText()}")
+            .toString()
         locationViewModel.setLogText(output)
         mapsViewModel.setPosition(LatLng(location.latitude, location.longitude))
     }

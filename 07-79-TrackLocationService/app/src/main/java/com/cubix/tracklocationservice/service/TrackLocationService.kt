@@ -72,10 +72,10 @@ class TrackLocationService : Service() {
             // receive them less frequently than requested. You may also receive updates more
             // frequently than requested if other applications are requesting location at a more
             // frequent interval.
-            .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(5))
+            .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(30))
             .setWaitForAccurateLocation(true)
-            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(5))
-            .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(15))
+            .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(30))
+            .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(60))
             .build()
 
 
