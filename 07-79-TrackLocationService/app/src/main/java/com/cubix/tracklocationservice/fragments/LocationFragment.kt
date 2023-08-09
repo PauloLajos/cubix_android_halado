@@ -18,7 +18,6 @@ class LocationFragment : Fragment() {
 
     private val viewModel: LocationViewModel by activityViewModels()
 
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
     }

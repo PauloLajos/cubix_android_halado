@@ -30,7 +30,11 @@ import android.net.Uri
 import android.provider.Settings
 import androidx.activity.viewModels
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
+import androidx.navigation.ui.setupWithNavController
 import com.cubix.tracklocationservice.fragments.LocationViewModel
+import com.cubix.tracklocationservice.fragments.MapsViewModel
+import com.google.android.gms.maps.model.LatLng
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 private const val TAG = "MainActivity"
 private const val REQUEST_FOREGROUND_ONLY_PERMISSIONS_REQUEST_CODE = 34
@@ -50,7 +54,9 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private lateinit var sharedPreferences: SharedPreferences
 
-    private val viewModel: LocationViewModel by viewModels()
+    private val locationViewModel: LocationViewModel by viewModels()
+    private val mapsViewModel: MapsViewModel by viewModels()
+
 
     // Monitors connection to the while-in-use service.
     private val foregroundOnlyServiceConnection = object : ServiceConnection {
@@ -85,7 +91,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun setupView() {
         // ActionBar
-        setSupportActionBar(binding.toolbar)
+        //setSupportActionBar(binding.toolbar)
 
         // Get the navigation host fragment from this Activity
         val navHostFragment = supportFragmentManager
@@ -95,8 +101,14 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val navController = navHostFragment.navController
 
         // Make sure actions in the ActionBar get propagated to the NavController
-        appBarConfiguration = AppBarConfiguration(navController.graph)
+        //appBarConfiguration = AppBarConfiguration(navController.graph)
+        appBarConfiguration = AppBarConfiguration(
+            setOf(R.id.navigation_log, R.id.navigation_map, R.id.navigation_about)
+        )
         setupActionBarWithNavController(navController, appBarConfiguration)
+
+        val navView: BottomNavigationView = binding.bottomNavView
+        navView.setupWithNavController(navController)
     }
 
     fun buttonClick() {
@@ -254,7 +266,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
             }
 
             if (location != null) {
-                logResultsToScreen("Foreground location: ${location.toText()}")
+                logResultsToScreen(location)
             }
         }
     }
@@ -311,18 +323,21 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     private fun updateButtonState(trackingLocation: Boolean) {
         if (trackingLocation) {
-            viewModel.setButtonText(getString(R.string.stop_location_updates_button_text))
+            locationViewModel.setButtonText(getString(R.string.stop_location_updates_button_text))
             //foregroundOnlyLocationButton.text =
                 //getString(R.string.stop_location_updates_button_text)
         } else {
-            viewModel.setButtonText(getString(R.string.start_location_updates_button_text))
+            locationViewModel.setButtonText(getString(R.string.start_location_updates_button_text))
             //foregroundOnlyLocationButton.text =
                 //getString(R.string.start_location_updates_button_text)
         }
     }
 
-    private fun logResultsToScreen(output: String) {
-        viewModel.setLogText(output)
+    private fun logResultsToScreen(location: Location) {
+        val output = "Foreground location: ${location.toText()}"
+        locationViewModel.setLogText(output)
+        mapsViewModel.setPosition(LatLng(location.latitude, location.longitude))
+
         //val outputWithPreviousLogs = "$output\n${outputTextView.text}"
         //outputTextView.text = outputWithPreviousLogs
     }

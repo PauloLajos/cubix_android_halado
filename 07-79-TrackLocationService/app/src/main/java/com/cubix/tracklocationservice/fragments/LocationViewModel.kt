@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
 class LocationViewModel : ViewModel() {
-    private val mutableButtonText = MutableLiveData<String>("")
+    private val mutableButtonText = MutableLiveData<String>()
     val buttonText: LiveData<String> get() = mutableButtonText
 
     fun setButtonText(text: String) {
