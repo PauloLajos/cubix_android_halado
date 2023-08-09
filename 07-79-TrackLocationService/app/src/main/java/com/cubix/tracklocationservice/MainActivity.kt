@@ -46,7 +46,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private var foregroundOnlyLocationService: TrackLocationService? = null
 
     // Listens for location broadcasts from ForegroundOnlyLocationService.
-    private lateinit var foregroundOnlyBroadcastReceiver: TrackBroadcastReceiver
+    private lateinit var trackBroadcastReceiver: TrackBroadcastReceiver
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -73,6 +73,18 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // set up view elements
+        setupView()
+
+        //
+        trackBroadcastReceiver = TrackBroadcastReceiver()
+
+        sharedPreferences =
+            getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
+    }
+
+    private fun setupView() {
+        // ActionBar
         setSupportActionBar(binding.toolbar)
 
         // Get the navigation host fragment from this Activity
@@ -85,19 +97,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         // Make sure actions in the ActionBar get propagated to the NavController
         appBarConfiguration = AppBarConfiguration(navController.graph)
         setupActionBarWithNavController(navController, appBarConfiguration)
-
-        binding.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null).show()
-        }
-
-        /**************************************
-         *
-         */
-        foregroundOnlyBroadcastReceiver = TrackBroadcastReceiver()
-
-        sharedPreferences =
-            getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
     }
 
     fun buttonClick() {
@@ -110,8 +109,6 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         } else {
 
             // Review Permissions: Checks and requests if needed.
-            //
-            // TODO check permissions
             if (foregroundPermissionApproved()) {
                 foregroundOnlyLocationService?.subscribeToLocationUpdates()
                     ?: Log.d(TAG, "Service Not Bound")
@@ -288,7 +285,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     override fun onResume() {
         super.onResume()
         LocalBroadcastManager.getInstance(this).registerReceiver(
-            foregroundOnlyBroadcastReceiver,
+            trackBroadcastReceiver,
             IntentFilter(
                 TrackLocationService.ACTION_TRACK_LOCATION_BROADCAST
             )
@@ -297,7 +294,7 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
 
     override fun onPause() {
         LocalBroadcastManager.getInstance(this).unregisterReceiver(
-            foregroundOnlyBroadcastReceiver
+            trackBroadcastReceiver
         )
         super.onPause()
     }

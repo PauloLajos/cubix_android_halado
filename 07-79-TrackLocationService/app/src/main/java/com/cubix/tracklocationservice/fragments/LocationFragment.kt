@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import com.cubix.tracklocationservice.MainActivity
@@ -15,7 +16,7 @@ class LocationFragment : Fragment() {
     private var _binding: FragmentLocationBinding? = null
     private val binding get() = _binding!!
 
-    private val viewModel: LocationViewModel by viewModels()
+    private val viewModel: LocationViewModel by activityViewModels()
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -41,7 +42,8 @@ class LocationFragment : Fragment() {
 
         viewModel.logText.observe(viewLifecycleOwner) { text ->
             // Perform an action with the latest item data.
-            binding.outputTextView.text = text
+            val outputWithPreviousLogs = "$text\n${binding.outputTextView.text}"
+            binding.outputTextView.text = outputWithPreviousLogs
         }
 
         binding.foregroundOnlyLocationButton.setOnClickListener {

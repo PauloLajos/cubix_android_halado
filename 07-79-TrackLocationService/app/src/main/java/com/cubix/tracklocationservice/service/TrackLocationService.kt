@@ -89,7 +89,7 @@ class TrackLocationService : Service() {
             priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
             */
-            .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(60))
+            .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(5))
             .setWaitForAccurateLocation(true)
             .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(5))
             .setMaxUpdateDelayMillis(TimeUnit.SECONDS.toMillis(15))
