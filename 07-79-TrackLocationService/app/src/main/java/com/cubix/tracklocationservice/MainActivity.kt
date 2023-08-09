@@ -110,6 +110,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         } else {
 
             // Review Permissions: Checks and requests if needed.
+            //
+            // TODO check permissions
             if (foregroundPermissionApproved()) {
                 foregroundOnlyLocationService?.subscribeToLocationUpdates()
                     ?: Log.d(TAG, "Service Not Bound")
