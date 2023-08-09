@@ -27,6 +27,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 import java.util.concurrent.TimeUnit
 
+
 class TrackLocationService : Service() {
 
     /*
@@ -71,22 +72,6 @@ class TrackLocationService : Service() {
             // receive them less frequently than requested. You may also receive updates more
             // frequently than requested if other applications are requesting location at a more
             // frequent interval.
-            //
-            // IMPORTANT NOTE: Apps running on Android 8.0 and higher devices (regardless of
-            // targetSdkVersion) may receive updates less frequently than this interval when the app
-            // is no longer in the foreground.
-            //interval = TimeUnit.SECONDS.toMillis(60)
-
-            // Sets the fastest rate for active location updates. This interval is exact, and your
-            // application will never receive updates more frequently than this value.
-            //fastestInterval = TimeUnit.SECONDS.toMillis(30)
-
-            // Sets the maximum time when batched location updates are delivered. Updates may be
-            // delivered sooner than this interval.
-            //maxWaitTime = TimeUnit.MINUTES.toMillis(2)
-
-            //priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-
             .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(5))
             .setWaitForAccurateLocation(true)
             .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(5))
@@ -269,32 +254,25 @@ class TrackLocationService : Service() {
             .setBigContentTitle(titleText)
 
         // 3. Set up main Intent/Pending Intents for notification.
+        // launch app
         val launchActivityIntent = Intent(this, MainActivity::class.java)
-
-        val cancelIntent = Intent(this, TrackLocationService::class.java)
-        cancelIntent.putExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, true)
-
-        val servicePendingIntent = PendingIntent.getService(
-            this, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-
         val activityPendingIntent = PendingIntent.getActivity(
             this, 0, launchActivityIntent, PendingIntent.FLAG_IMMUTABLE
         )
 
-        // send position
-        /*
-        val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
-        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
-        mapIntent.setPackage("com.google.android.apps.maps")
-        mapIntent.resolveActivity(packageManager)?.let {
-            startActivity(mapIntent)
-        }
+        // stop service
+        val cancelIntent = Intent(this, TrackLocationService::class.java)
+        cancelIntent.putExtra(EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION, true)
+        val servicePendingIntent = PendingIntent.getService(
+            this, 0, cancelIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-         */
+        // share position uri
+        val uri = "geo:${location?.latitude},${location?.longitude}?z="
+        val shareIntent = Intent(Intent.ACTION_VIEW, Uri.parse(uri))
+        shareIntent.setPackage("com.google.android.apps.maps")
         val sendActivityPendingIntent = PendingIntent.getActivity(
-            this, 0, launchActivityIntent, PendingIntent.FLAG_IMMUTABLE
+            this, 0, shareIntent, PendingIntent.FLAG_IMMUTABLE
         )
-
 
         // 4. Build and issue the notification.
         // Notification Channel Id is ignored for Android pre O (26).
@@ -310,7 +288,8 @@ class TrackLocationService : Service() {
             .setOngoing(true)
             .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
             .addAction(
-                R.drawable.ic_launch, getString(R.string.launch_activity),
+                R.drawable.ic_launch,
+                getString(R.string.launch_activity),
                 activityPendingIntent
             )
             .addAction(
@@ -348,7 +327,7 @@ class TrackLocationService : Service() {
         private const val EXTRA_CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION =
             "$PACKAGE_NAME.extra.CANCEL_LOCATION_TRACKING_FROM_NOTIFICATION"
 
-        private const val NOTIFICATION_ID = 12345678
+        private const val NOTIFICATION_ID = 10072
 
         private const val NOTIFICATION_CHANNEL_ID = "track_location_channel_01"
     }

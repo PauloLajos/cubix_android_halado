@@ -82,17 +82,15 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         // set up view elements
         setupView()
 
-        //
+        // init BroadcastReceiver
         trackBroadcastReceiver = TrackBroadcastReceiver()
 
+        // create shave data preference file
         sharedPreferences =
             getSharedPreferences(getString(R.string.preference_file_key), Context.MODE_PRIVATE)
     }
 
     private fun setupView() {
-        // ActionBar
-        //setSupportActionBar(binding.toolbar)
-
         // Get the navigation host fragment from this Activity
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment_content_main) as NavHostFragment
@@ -324,12 +322,8 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
     private fun updateButtonState(trackingLocation: Boolean) {
         if (trackingLocation) {
             locationViewModel.setButtonText(getString(R.string.stop_location_updates_button_text))
-            //foregroundOnlyLocationButton.text =
-                //getString(R.string.stop_location_updates_button_text)
         } else {
             locationViewModel.setButtonText(getString(R.string.start_location_updates_button_text))
-            //foregroundOnlyLocationButton.text =
-                //getString(R.string.start_location_updates_button_text)
         }
     }
 
@@ -337,8 +331,5 @@ class MainActivity : AppCompatActivity(), SharedPreferences.OnSharedPreferenceCh
         val output = "Foreground location: ${location.toText()}"
         locationViewModel.setLogText(output)
         mapsViewModel.setPosition(LatLng(location.latitude, location.longitude))
-
-        //val outputWithPreviousLogs = "$output\n${outputTextView.text}"
-        //outputTextView.text = outputWithPreviousLogs
     }
 }
