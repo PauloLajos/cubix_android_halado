@@ -8,6 +8,7 @@ import android.app.Service
 import android.content.Intent
 import android.content.res.Configuration
 import android.location.Location
+import android.net.Uri
 import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
@@ -65,8 +66,6 @@ class TrackLocationService : Service() {
 
         // Create a LocationRequest.
         locationRequest = LocationRequest
-            /*
-            .create().apply {
             // Sets the desired interval for active location updates. This interval is inexact. You
             // may not receive updates at all if no location sources are available, or you may
             // receive them less frequently than requested. You may also receive updates more
@@ -76,19 +75,18 @@ class TrackLocationService : Service() {
             // IMPORTANT NOTE: Apps running on Android 8.0 and higher devices (regardless of
             // targetSdkVersion) may receive updates less frequently than this interval when the app
             // is no longer in the foreground.
-            interval = TimeUnit.SECONDS.toMillis(60)
+            //interval = TimeUnit.SECONDS.toMillis(60)
 
             // Sets the fastest rate for active location updates. This interval is exact, and your
             // application will never receive updates more frequently than this value.
-            fastestInterval = TimeUnit.SECONDS.toMillis(30)
+            //fastestInterval = TimeUnit.SECONDS.toMillis(30)
 
             // Sets the maximum time when batched location updates are delivered. Updates may be
             // delivered sooner than this interval.
-            maxWaitTime = TimeUnit.MINUTES.toMillis(2)
+            //maxWaitTime = TimeUnit.MINUTES.toMillis(2)
 
-            priority = LocationRequest.PRIORITY_HIGH_ACCURACY
+            //priority = LocationRequest.PRIORITY_HIGH_ACCURACY
 
-            */
             .Builder(Priority.PRIORITY_HIGH_ACCURACY, TimeUnit.SECONDS.toMillis(5))
             .setWaitForAccurateLocation(true)
             .setMinUpdateIntervalMillis(TimeUnit.SECONDS.toMillis(5))
@@ -283,6 +281,21 @@ class TrackLocationService : Service() {
             this, 0, launchActivityIntent, PendingIntent.FLAG_IMMUTABLE
         )
 
+        // send position
+        /*
+        val gmmIntentUri = Uri.parse("geo:37.7749,-122.4194")
+        val mapIntent = Intent(Intent.ACTION_VIEW, gmmIntentUri)
+        mapIntent.setPackage("com.google.android.apps.maps")
+        mapIntent.resolveActivity(packageManager)?.let {
+            startActivity(mapIntent)
+        }
+
+         */
+        val sendActivityPendingIntent = PendingIntent.getActivity(
+            this, 0, launchActivityIntent, PendingIntent.FLAG_IMMUTABLE
+        )
+
+
         // 4. Build and issue the notification.
         // Notification Channel Id is ignored for Android pre O (26).
         val notificationCompatBuilder =
@@ -299,6 +312,11 @@ class TrackLocationService : Service() {
             .addAction(
                 R.drawable.ic_launch, getString(R.string.launch_activity),
                 activityPendingIntent
+            )
+            .addAction(
+                R.drawable.map,
+                getString(R.string.send_location_button_text),
+                sendActivityPendingIntent
             )
             .addAction(
                 R.drawable.ic_cancel,
