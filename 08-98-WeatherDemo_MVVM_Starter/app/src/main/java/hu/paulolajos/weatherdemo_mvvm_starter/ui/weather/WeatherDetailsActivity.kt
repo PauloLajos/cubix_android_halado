@@ -29,6 +29,7 @@ class WeatherDetailsActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
         binding = ActivityWeatherDetailsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
@@ -47,7 +48,7 @@ class WeatherDetailsActivity : AppCompatActivity() {
 
         weatherCall.enqueue(object : Callback<WeatherResult> {
             override fun onFailure(call: Call<WeatherResult>, t: Throwable) {
-                //tvCityName.text = t.message
+                binding.tvCity.text = t.message
             }
 
             override fun onResponse(call: Call<WeatherResult>, response: Response<WeatherResult>) {
@@ -62,17 +63,19 @@ class WeatherDetailsActivity : AppCompatActivity() {
         weatherData: WeatherResult?,
         icon: String?
     ) {
-        Glide.with(this@WeatherDetailsActivity)
-            .load("https://openweathermap.org/img/w/$icon.png")
-            .into(binding.ivWeatherIcon)
 
+        Glide.with(this@WeatherDetailsActivity)
+            //Glide not load from https link
+            .load("https://openweathermap.org/img/w/$icon.png")
+            .error("http://openweathermap.org/img/w/$icon.png")
+            .into(binding.ivWeatherIcon)
 
         binding.tvMain.text = weatherData?.weather?.get(0)?.main
         binding.tvDescription.text = weatherData?.weather?.get(0)?.description
         binding.tvTemperature.text =
             getString(R.string.temperature, weatherData?.main?.temp?.toFloat().toString())
 
-        val sdf = SimpleDateFormat("h:mm a z", Locale.getDefault())
+        val sdf = SimpleDateFormat("HH:mm", Locale.getDefault())
         val sunriseDate = Date((weatherData?.sys?.sunrise?.toLong())!! * 1000)
         val sunriseTime = sdf.format(sunriseDate)
         binding.tvSunrise.text = getString(R.string.sunrise, sunriseTime)
@@ -89,6 +92,7 @@ class WeatherDetailsActivity : AppCompatActivity() {
 
         val weatherApi = retrofit.create(WeatherAPI::class.java)
 
+        // get WEATHER_API_KEY from local.properties file
         var weatherApiKey = ""
         try {
             val app: ApplicationInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

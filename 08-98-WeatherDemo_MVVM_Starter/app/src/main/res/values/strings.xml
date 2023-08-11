@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">WeatherDemo_MVVM_Starter</string>
+    <string name="app_name">Weather Demo</string>
 
     <string name="action_settings">Settings</string>
 
@@ -10,4 +10,5 @@
     <string name="btn_add">Add</string>
     <string name="error_empty_field">This field is required</string>
     <string name="btn_dismiss">Dismiss</string>
+    <string name="weather_icon">weather icon</string>
 </resources>

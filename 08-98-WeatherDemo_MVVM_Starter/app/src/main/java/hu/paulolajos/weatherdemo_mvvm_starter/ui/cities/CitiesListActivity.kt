@@ -15,7 +15,7 @@ import hu.paulolajos.weatherdemo_mvvm_starter.model.db.City
 
 class CitiesListActivity : AppCompatActivity() {
 
-    lateinit var cityAdapter: CityAdapter
+    private lateinit var cityAdapter: CityAdapter
     private val citiesViewModel: CitiesViewModel by viewModels()
     private lateinit var binding: ActivityScrollingBinding
 
@@ -65,5 +65,4 @@ class CitiesListActivity : AppCompatActivity() {
             }
         }
     }
-
 }
