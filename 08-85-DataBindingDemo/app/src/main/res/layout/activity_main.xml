@@ -22,19 +22,35 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="@{dataBindingDemoString}" />
 
         <TextView
             android:id="@+id/tvViewBinding"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            tools:text="Hello"/>
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            tools:text="Hello" />
 
         <TextView
             android:id="@+id/tvCar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="@{`Car: `+car.type+`, `+car.manufactureDate}" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvCars"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="parent" />
 
     </LinearLayout>
 
