@@ -9,6 +9,10 @@
             type="String" />
 
         <variable
+            name="cityName"
+            type="String" />
+
+        <variable
             name="car"
             type="hu.paulolajos.databindingdemo.Car" />
     </data>
@@ -41,6 +45,21 @@
             android:layout_gravity="center_horizontal"
             android:gravity="center"
             android:text="@{`Car: `+car.type+`, `+car.manufactureDate}" />
+
+        <EditText
+            android:id="@+id/etCity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@={cityName}"
+            android:autofillHints="City name"
+            android:labelFor="@id/etCity"
+            android:inputType="text" />
+
+        <Button
+            android:id="@+id/btnDemo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Demo"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCars"
