@@ -13,6 +13,10 @@
             type="String" />
 
         <variable
+            name="imageUrl"
+            type="String" />
+
+        <variable
             name="car"
             type="hu.paulolajos.databindingdemo.Car" />
     </data>
@@ -50,6 +54,8 @@
             android:id="@+id/etCity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="@={cityName}"
             android:autofillHints="City name"
             android:labelFor="@id/etCity"
@@ -59,7 +65,24 @@
             android:id="@+id/btnDemo"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
             android:text="Demo"/>
+
+        <ImageView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            app:setImageUrl="@{imageUrl}"/>
+
+        <Button
+            android:id="@+id/btnImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:text="Next image"/>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rvCars"
