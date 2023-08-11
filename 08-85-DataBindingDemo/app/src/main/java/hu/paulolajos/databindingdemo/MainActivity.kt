@@ -15,6 +15,9 @@ class MainActivity : AppCompatActivity() {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
         binding.dataBindingDemoString = "Hello data binding!"
+
         binding.tvViewBinding.text = "Hello view binding!"
+
+        binding.car = Car("Suzuki Vitara", "2020.01.01.")
     }
 }

@@ -7,6 +7,10 @@
         <variable
             name="dataBindingDemoString"
             type="String" />
+
+        <variable
+            name="car"
+            type="hu.paulolajos.databindingdemo.Car" />
     </data>
 
     <LinearLayout
@@ -25,6 +29,12 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             tools:text="Hello"/>
+
+        <TextView
+            android:id="@+id/tvCar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@{`Car: `+car.type+`, `+car.manufactureDate}" />
 
     </LinearLayout>
 
