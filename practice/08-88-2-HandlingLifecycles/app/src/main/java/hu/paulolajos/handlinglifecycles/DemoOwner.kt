@@ -6,11 +6,11 @@ import androidx.lifecycle.LifecycleRegistry
 
 class DemoOwner : LifecycleOwner {
 
+    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
+
     init {
         lifecycle.addObserver(DemoObserver())
     }
-
-    private val lifecycleRegistry: LifecycleRegistry = LifecycleRegistry(this)
 
     fun startOwner() {
         lifecycleRegistry.handleLifecycleEvent(Lifecycle.Event.ON_START)

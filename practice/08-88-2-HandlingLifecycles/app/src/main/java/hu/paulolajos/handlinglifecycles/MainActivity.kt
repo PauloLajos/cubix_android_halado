@@ -3,6 +3,9 @@ package hu.paulolajos.handlinglifecycles
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 
+/**
+ *  https://www.answertopia.com/android-studio/an-android-lifecycle-awareness-tutorial/
+ */
 class MainActivity : AppCompatActivity() {
 
     private lateinit var demoOwner: DemoOwner
