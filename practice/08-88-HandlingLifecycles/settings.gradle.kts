@@ -13,5 +13,5 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Handling Lifecycles"
+rootProject.name = "HandlingLifecycles"
 include(":app")
