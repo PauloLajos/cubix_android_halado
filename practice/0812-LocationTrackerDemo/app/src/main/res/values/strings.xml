@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LocationTrackerDemo</string>
+    <string name="map">Map</string>
 </resources>
