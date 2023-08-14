@@ -2,6 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
+    id("org.jetbrains.kotlin.kapt")
     id("dagger.hilt.android.plugin")
 }
 
@@ -36,6 +37,7 @@ android {
         jvmTarget = "17"
     }
     buildFeatures {
+        buildConfig = true
         viewBinding = true
     }
 }
@@ -62,15 +64,13 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-extensions:2.2.0")
 
     //Kotlin Coroutines
-    val coroutines_android_version = "1.6.4"
+    val coroutines_android_version = "1.7.3"
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines_android_version")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$coroutines_android_version")
 
     //Hilt
-    implementation("com.google.dagger:hilt-android:2.31-alpha")
-    implementation("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha03")
-    ksp("com.google.dagger:hilt-android-compiler:2.28.1-alpha")
-    ksp("androidx.hilt:hilt-compiler:1.1.0-alpha01")
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-compiler:2.47")
 
     //Room
     val room_version = "2.5.2"
@@ -85,8 +85,8 @@ dependencies {
 
     //Glide
     implementation("com.github.bumptech.glide:glide:4.15.1")
-    ksp("com.github.bumptech.glide:compiler:4.14.2")
+    ksp("com.github.bumptech.glide:compiler:4.15.1")
 
     //Timber
-    implementation("com.jakewharton.timber:timber:4.7.1")
+    implementation("com.jakewharton.timber:timber:5.0.1")
 }
