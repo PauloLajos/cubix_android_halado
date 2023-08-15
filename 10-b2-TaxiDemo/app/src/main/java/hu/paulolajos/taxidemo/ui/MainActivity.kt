@@ -1,12 +1,17 @@
 package hu.paulolajos.taxidemo.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import hu.paulolajos.taxidemo.R
+import androidx.appcompat.app.AppCompatActivity
+import hu.paulolajos.taxidemo.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var binding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
     }
 }
