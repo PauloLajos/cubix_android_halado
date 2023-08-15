@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:context=".ui.fragments.ChatFragment">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/chatRecyclerView"
+        android:layout_width="366dp"
+        android:layout_height="477dp"
+        android:layout_marginTop="100dp"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
+
+    <EditText
+        android:id="@+id/editTextChat"
+        android:layout_width="298dp"
+        android:layout_height="87dp"
+        android:layout_gravity="bottom|left"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:visibility="invisible" />
+
+    <Button
+        android:id="@+id/buttonChat"
+        android:layout_width="98dp"
+        android:layout_height="84dp"
+        android:layout_gravity="bottom|right"
+        android:text="Send"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/chatPersonTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="50dp"
+        android:textSize="24sp" />
+
+    <TextView
+        android:id="@+id/warningTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="30dp"
+        android:layout_marginTop="200dp"
+        android:text="No current order"
+        android:textSize="24sp"
+        android:visibility="invisible" />
+
+</FrameLayout>

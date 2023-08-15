@@ -1,5 +1,7 @@
 package hu.paulolajos.taxidemo.ui
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -10,11 +12,15 @@ import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import hu.paulolajos.taxidemo.R
 import hu.paulolajos.taxidemo.databinding.ActivityMainBinding
+import hu.paulolajos.taxidemo.util.Util
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
+
+    private lateinit var activity: Activity
 
     companion object {
         const val TAG = "MainActivity"
@@ -25,6 +31,21 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        activity = this@MainActivity
+
+        if (!Util.isLocationEnabledOrNot(activity)) {
+            Util.showAlertLocation(
+                activity,
+                getString(R.string.gps_enable),
+                getString(R.string.please_turn_on_gps),
+                getString(R.string.ok)
+            )
+        }
+
+        requestPermissionsSafely(
+            arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), 200
+        )
+
         binding.loginButton.setOnClickListener {
             performLogin()
         }
@@ -33,6 +54,13 @@ class MainActivity : AppCompatActivity() {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
         }
+    }
+
+    private fun requestPermissionsSafely(
+        permissions: Array<String>,
+        requestCode: Int
+    ) {
+        requestPermissions(permissions, requestCode)
     }
 
     private fun performLogin(){
@@ -53,7 +81,9 @@ class MainActivity : AppCompatActivity() {
                     return@addOnCompleteListener
 
                 val uid = FirebaseAuth.getInstance().uid ?: ""
-                val ref = FirebaseDatabase.getInstance().getReference("/users/$uid/isDriver")
+                val ref = FirebaseDatabase
+                    .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
+                    .getReference("/users/$uid/isDriver")
 
                 ref.addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {
@@ -68,7 +98,7 @@ class MainActivity : AppCompatActivity() {
             }
 
             .addOnFailureListener {
-                Toast.makeText(this,"Bad login password", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this,"Bad login email/password", Toast.LENGTH_SHORT).show()
             }
     }
 

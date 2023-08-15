@@ -36,7 +36,7 @@ class RegisterActivity : AppCompatActivity() {
         }
     }
 
-    fun performRegister(){
+    private fun performRegister(){
 
         val login = binding.emailTextRegister.text.toString()
         val password = binding.passwordTextRegister.text.toString()
@@ -76,7 +76,9 @@ class RegisterActivity : AppCompatActivity() {
         val username = binding.usernameText.text.toString()
         val phone = binding.phoneTextView.text.toString()
         val uid = FirebaseAuth.getInstance().uid ?: ""
-        val ref = FirebaseDatabase.getInstance().reference.child("users")
+        val ref = FirebaseDatabase
+            .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
+            .reference.child("users")
         val user = User(
             uid = uid,
             username = username,

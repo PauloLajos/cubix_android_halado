@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">TaxiDemo</string>
 
+    <string name="gps_enable">GPS enable</string>
+    <string name="please_turn_on_gps">Please turn on GPS</string>
+    <string name="ok">OK</string>
+
     <string name="title_activity_maps">Map</string>
     <string name="drawerOpen">drawerOpen</string>
     <string name="drawerClose">drawerClose</string>
