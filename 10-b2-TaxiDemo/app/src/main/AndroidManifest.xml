@@ -31,6 +31,10 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".ui.RegisterActivity"/>
+        <activity android:name=".ui.MapsActivity"/>
+        <activity android:name=".ui.DriveActivity"/>
+
     </application>
 
 </manifest>

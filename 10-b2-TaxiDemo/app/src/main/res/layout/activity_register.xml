@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <EditText
+        android:id="@+id/emailTextRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:ems="10"
+        android:padding="5dp"
+        android:inputType="textEmailAddress"
+        android:hint="@string/email"
+        app:layout_constraintStart_toStartOf="@+id/usernameText"
+        app:layout_constraintEnd_toEndOf="@+id/usernameText"
+        app:layout_constraintTop_toBottomOf="@+id/usernameText"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+    <EditText
+        android:id="@+id/passwordTextRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="5dp"
+        android:layout_marginTop="24dp"
+        android:ems="10"
+        android:inputType="textPassword"
+        android:hint="@string/password"
+        app:layout_constraintStart_toStartOf="@+id/emailTextRegister"
+        app:layout_constraintEnd_toEndOf="@+id/emailTextRegister"
+        app:layout_constraintTop_toBottomOf="@+id/emailTextRegister"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+    <EditText
+        android:id="@+id/passwordRepeatTextRegister"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:ems="10"
+        android:padding="5dp"
+        android:inputType="textPassword"
+        android:hint="@string/repeat_password"
+        app:layout_constraintTop_toBottomOf="@+id/passwordTextRegister"
+        app:layout_constraintStart_toStartOf="@+id/passwordTextRegister"
+        app:layout_constraintEnd_toEndOf="@+id/passwordTextRegister"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+    <Button
+        android:id="@+id/registerButtonConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="28dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/create_an_account"
+        app:layout_constraintTop_toBottomOf="@+id/spinnerRole"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        />
+
+    <EditText
+        android:id="@+id/usernameText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="108dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="8dp"
+        android:padding="5dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:hint="@string/username"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
+    <Spinner
+        android:id="@+id/spinnerRole"
+        android:layout_width="211dp"
+        android:layout_height="30dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="8dp"
+        android:padding="5dp"
+        android:entries="@array/roles"
+        app:layout_constraintTop_toBottomOf="@+id/phoneTextView"
+        app:layout_constraintStart_toStartOf="@+id/phoneTextView"
+        app:layout_constraintEnd_toEndOf="@+id/phoneTextView"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+    <EditText
+        android:id="@+id/phoneTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:padding="5dp"
+        android:ems="10"
+        android:inputType="phone"
+        android:hint="@string/phone_number"
+        app:layout_constraintTop_toBottomOf="@+id/passwordRepeatTextRegister"
+        app:layout_constraintStart_toStartOf="@+id/passwordRepeatTextRegister"
+        app:layout_constraintEnd_toEndOf="@+id/passwordRepeatTextRegister"
+        app:layout_constraintHorizontal_bias="0.0"
+        />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

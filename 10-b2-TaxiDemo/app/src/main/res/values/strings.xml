@@ -1,3 +1,20 @@
 <resources>
     <string name="app_name">TaxiDemo</string>
+
+    <string name="title_activity_maps">Map</string>
+    <string name="drawerOpen">drawerOpen</string>
+    <string name="drawerClose">drawerClose</string>
+    <string-array name="roles">
+        <item>Client</item>
+        <item>Driver</item>
+    </string-array>
+
+    <string name="email">Email</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="registration">Registration</string>
+    <string name="phone_number">Phone number</string>
+    <string name="username">Username</string>
+    <string name="create_an_account">Create an account</string>
+    <string name="repeat_password">Repeat password</string>
 </resources>
