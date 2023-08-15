@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:id="@+id/newcourse"
+        android:title="Road"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/roads"/>
+    <item android:id="@+id/mapmenuitem"
+        android:title="Map"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/worldwide"/>
+    <item android:id="@+id/chatmenuitem"
+        android:title="Chat"
+        app:showAsAction="ifRoom|withText"
+        android:icon="@drawable/chat"/>
+    <item android:id="@+id/ordersMenuItem"
+        android:title="History"
+        app:showAsAction="always|withText"
+        android:icon="@drawable/history"/>
+    <item android:id="@+id/logoutmenuitem"
+        android:title="Logout"
+        app:showAsAction="always|withText"
+        android:icon="@drawable/logout"/>
+</menu>
