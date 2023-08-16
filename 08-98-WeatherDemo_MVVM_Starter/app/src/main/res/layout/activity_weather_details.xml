@@ -1,58 +1,32 @@
-<?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorAccent"
-    android:orientation="vertical"
-    android:padding="25dp"
-    tools:context=".ui.weather.WeatherDetailsActivity">
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    
+    <data>
+        <variable
+            name="viewModel"
+            type="hu.paulolajos.weatherdemo_mvvm_starter.ui.weather.model.WeatherViewModel" />
+    </data>
 
-    <TextView
-        android:id="@+id/tvCity"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="28sp"
-        android:textStyle="bold"
-        android:layout_marginBottom="20dp"
-        tools:text="Budapest" />
-    <TextView
-        android:id="@+id/tvMain"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        tools:text="Clear" />
-    <TextView
-        android:id="@+id/tvDescription"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        tools:text="clear sky" />
-    <TextView
-        android:id="@+id/tvTemperature"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        tools:text="15 °C" />
-    <TextView
-        android:id="@+id/tvSunrise"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        tools:text="Sunrise at 05:33" />
-    <TextView
-        android:id="@+id/tvSunset"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="24sp"
-        tools:text="Sunset at 20:04" />
+    <LinearLayout 
+        android:layout_height="match_parent"
+         android:layout_width="match_parent">
+        <TextView
+            android:text="@{Double.toString(viewModel.weatherData.temperature)}"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            />
 
-    <ImageView
-        android:id="@+id/ivWeatherIcon"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:contentDescription="@string/weather_icon"
-        tools:src="@drawable/tools01d" />
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@{viewModel.weatherData.humidity}" />
 
-</LinearLayout>
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@{viewModel.weatherData.conditions}" />
+
+        <!-- Other UI components -->
+    </LinearLayout>
+</layout>
