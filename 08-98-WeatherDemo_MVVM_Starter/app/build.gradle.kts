@@ -1,8 +1,11 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+
+    id("kotlin-kapt")
     id("com.google.devtools.ksp")
     id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -60,7 +63,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:2.6.1")
     implementation("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.1")
     //noinspection LifecycleAnnotationProcessorWithJava8
-    annotationProcessor("androidx.lifecycle:lifecycle-compiler:2.6.1")
+    //annotationProcessor("androidx.lifecycle:lifecycle-compiler:2.6.1")
+    //noinspection LifecycleAnnotationProcessorWithJava8
+    kapt("androidx.lifecycle:lifecycle-compiler:2.6.1")
     implementation("androidx.lifecycle:lifecycle-common-java8:2.6.1")
 
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
@@ -87,4 +92,13 @@ dependencies {
     implementation("androidx.room:room-runtime:2.5.2")
     implementation("androidx.room:room-ktx:2.5.2")
     ksp("androidx.room:room-compiler:2.5.2")
+
+    //dagger-hilt
+    implementation("com.google.dagger:hilt-android:2.47")
+    kapt("com.google.dagger:hilt-android-compiler:2.47")
+    kapt("androidx.hilt:hilt-compiler:1.1.0-alpha01")
+}
+
+kapt {
+    correctErrorTypes = true
 }

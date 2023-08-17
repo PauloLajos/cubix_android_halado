@@ -7,12 +7,13 @@ import androidx.appcompat.app.AppCompatActivity
 import com.afollestad.materialdialogs.MaterialDialog
 import com.afollestad.materialdialogs.input.getInputField
 import com.afollestad.materialdialogs.input.input
+import dagger.hilt.android.AndroidEntryPoint
 import hu.paulolajos.weatherdemo_mvvm_starter.R
 import hu.paulolajos.weatherdemo_mvvm_starter.databinding.ActivityScrollingBinding
 import hu.paulolajos.weatherdemo_mvvm_starter.ui.cities.adapter.CityAdapter
 import hu.paulolajos.weatherdemo_mvvm_starter.model.db.City
 
-
+@AndroidEntryPoint
 class CitiesListActivity : AppCompatActivity() {
 
     private lateinit var cityAdapter: CityAdapter
