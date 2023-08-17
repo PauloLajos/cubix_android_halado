@@ -20,10 +20,15 @@ data class WeatherResult(
 )
 
 @JsonClass(generateAdapter = true)
-data class Clouds(val all: Double?)
+data class Clouds(
+    val all: Double?
+)
 
 @JsonClass(generateAdapter = true)
-data class Coord(val lon: Double?, val lat: Double?)
+data class Coord(
+    val lon: Double?,
+    val lat: Double?
+)
 
 @JsonClass(generateAdapter = true)
 data class Main(
