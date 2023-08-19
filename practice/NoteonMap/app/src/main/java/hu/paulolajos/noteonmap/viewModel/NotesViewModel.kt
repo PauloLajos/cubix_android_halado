@@ -25,6 +25,7 @@ class NotesViewModel : ViewModel() {
     init {
         getDataFromFirebase()
 
+        // _notes.value = sampleData.toMutableList()
         _notes.value = mutableListOf()
     }
 
