@@ -12,6 +12,10 @@ class NotesViewModel : ViewModel() {
         get() = _notes
 
     init {
-        _notes.value = sampleData.toMutableList()
+        _notes.value = mutableListOf()
+    }
+
+    fun addNote(note: Note) {
+        _notes.value?.add( note)
     }
 }

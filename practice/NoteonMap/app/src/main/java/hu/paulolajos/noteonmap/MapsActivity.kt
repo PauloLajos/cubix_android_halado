@@ -20,12 +20,14 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.location.Location
 import android.util.Log
+import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import hu.paulolajos.noteonmap.data.Note
+import hu.paulolajos.noteonmap.databinding.DialogInputBinding
 import hu.paulolajos.noteonmap.viewModel.NotesViewModel
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
@@ -88,7 +90,15 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         lastKnownLocation?.apply {
             mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(
                 LatLng(latitude, longitude), DEFAULT_ZOOM.toFloat()))
-        }    }
+        }
+
+        mMap.setOnMarkerClickListener { marker ->
+            showNoteDetail(notesViewModel.notes.value?.firstOrNull { note ->
+                note.latLng == marker.position }, marker.position)}
+
+        mMap.setOnMapLongClickListener { latLng ->
+            showNoteDetail(null, latLng)}
+    }
 
     @SuppressLint("MissingPermission")
     private fun getDeviceLocation() {
@@ -156,19 +166,43 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         val height = lines.size * 44
         val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(image).apply {
-            val paint = Paint()
-            paint.color = Color.WHITE
-            paint.style = Paint.Style.FILL
-            drawRect(0.0f, 0.0F, width.toFloat(), height.toFloat(), paint)
-            paint.color = Color.BLACK
-            paint.style = Paint.Style.STROKE
-            drawRect(0.0f, 0.0F, (width-1).toFloat(), (height-1).toFloat(), paint)
+            val canvasPaint = Paint()
+            canvasPaint.color = Color.WHITE
+            canvasPaint.style = Paint.Style.FILL
+            drawRect(0.0f, 0.0F, width.toFloat(), height.toFloat(), canvasPaint)
+            canvasPaint.color = Color.BLACK
+            canvasPaint.style = Paint.Style.STROKE
+            drawRect(0.0f, 0.0F, (width-1).toFloat(), (height-1).toFloat(), canvasPaint)
         }
         lines.forEach {
             canvas.drawText(it, 8.0f, baseline, paint)
             baseline += 44
         }
         return image
+    }
+
+    private fun showNoteDetail( note: Note?, latLng: LatLng): Boolean {
+        val dialogInputBinding: DialogInputBinding = DialogInputBinding.inflate(layoutInflater)
+        dialogInputBinding.user = note?.user
+        dialogInputBinding.text = note?.text
+
+        val dialogBuilder = AlertDialog.Builder(this)
+            .setTitle("Note")
+            .setView( dialogInputBinding.root)
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.cancel() }
+
+        if (note == null) {
+            dialogBuilder.setPositiveButton("OK") { dialog, _ ->
+                val user = dialogInputBinding.user ?: ""
+                val text = dialogInputBinding.text ?: ""
+                if (user.isNotEmpty() and text.isNotEmpty()) {
+                    notesViewModel.addNote(Note(user = user, text = text, latLng = latLng))
+                    updateUI()
+                }
+            }
+        }
+        dialogBuilder.show()
+        return true
     }
 
     private fun getLocationPermission() {

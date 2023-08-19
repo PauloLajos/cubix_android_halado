@@ -37,6 +37,8 @@ android {
     buildFeatures {
         // google api key
         buildConfig = true
+        //noinspection DataBindingWithoutKapt
+        dataBinding = true
         viewBinding = true
     }
 }
