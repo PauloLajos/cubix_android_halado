@@ -3,7 +3,6 @@ package hu.paulolajos.noteonmap
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.app.ActivityCompat
-
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
 import com.google.android.gms.maps.OnMapReadyCallback
@@ -22,6 +21,7 @@ import android.location.Location
 import android.util.Log
 import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
@@ -29,6 +29,12 @@ import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import hu.paulolajos.noteonmap.data.Note
 import hu.paulolajos.noteonmap.databinding.DialogInputBinding
 import hu.paulolajos.noteonmap.viewModel.NotesViewModel
+
+
+/***
+ * Firebase Realtime Database access: 2023.09.18.
+ */
+
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     ActivityCompat.OnRequestPermissionsResultCallback {
@@ -83,6 +89,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         mMap = googleMap
 
         updateUI()
+
+        notesViewModel.notes.observe(this) {
+            if (it != null) {
+                updateUI()
+            }
+        }
 
         getLocationPermission()
         getDeviceLocation()
