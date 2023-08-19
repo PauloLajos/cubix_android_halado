@@ -14,11 +14,19 @@ import hu.paulolajos.noteonmap.databinding.ActivityMapsBinding
 import android.Manifest
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.Canvas
+import android.graphics.Color
+import android.graphics.Paint
 import android.location.Location
 import android.util.Log
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
+import hu.paulolajos.noteonmap.data.Note
+import hu.paulolajos.noteonmap.viewModel.NotesViewModel
 
 class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     ActivityCompat.OnRequestPermissionsResultCallback {
@@ -28,6 +36,12 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
     private var lastKnownLocation: Location? = null
     private var cameraPosition: Location? = null
     private val defaultLocation = LatLng(46.6473027,21.2784255)
+
+    private val notesViewModel: NotesViewModel by lazy {
+        ViewModelProvider(this)[NotesViewModel::class.java]
+    }
+
+
 
     private lateinit var binding: ActivityMapsBinding
 
@@ -65,7 +79,8 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
 
     override fun onMapReady(googleMap: GoogleMap) {
         mMap = googleMap
-        mMap.addMarker(MarkerOptions().position(defaultLocation).title("Marker in Sydney"))
+
+        updateUI()
 
         getLocationPermission()
         getDeviceLocation()
@@ -103,6 +118,57 @@ class MapsActivity : AppCompatActivity(), OnMapReadyCallback,
         } catch (e: SecurityException) {
             Log.e("Exception: %s", e.message, e)
         }
+    }
+
+    private fun updateUI() {
+        notesViewModel.notes.value?.forEach {
+            val bmp = BitmapDescriptorFactory.fromBitmap(buildBitmap(it, 36.0F, Color.BLACK)!!)
+
+            mMap.addMarker(
+                MarkerOptions()
+                    .position(it.latLng)
+                    .title("${it.text} - ${it.user}")
+                    .icon(bmp)
+            )
+                ?.showInfoWindow()
+        }
+
+        try {
+            if (mMap.isMyLocationEnabled) {
+                mMap.uiSettings.isMyLocationButtonEnabled = true
+            } else {
+                mMap.uiSettings.isMyLocationButtonEnabled = false
+                lastKnownLocation = null
+            }
+        } catch (e: SecurityException) {
+            Log.e("Exception: %s", e.message, e)
+        }
+    }
+
+    fun buildBitmap(note: Note, textSize: Float, textColor: Int): Bitmap? {
+        val lines = "${note.text}\n - ${note.user}".split("\n")
+        val paint = Paint(Paint.ANTI_ALIAS_FLAG)
+        paint.textSize = textSize
+        paint.color = textColor
+        paint.textAlign = Paint.Align.LEFT
+        var baseline: Float = -paint.ascent() // ascent() is negative
+        val width = (paint.measureText(lines.maxByOrNull{ it.length }) + 0.5f).toInt() + 16 // round
+        val height = lines.size * 44
+        val image = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(image).apply {
+            val paint = Paint()
+            paint.color = Color.WHITE
+            paint.style = Paint.Style.FILL
+            drawRect(0.0f, 0.0F, width.toFloat(), height.toFloat(), paint)
+            paint.color = Color.BLACK
+            paint.style = Paint.Style.STROKE
+            drawRect(0.0f, 0.0F, (width-1).toFloat(), (height-1).toFloat(), paint)
+        }
+        lines.forEach {
+            canvas.drawText(it, 8.0f, baseline, paint)
+            baseline += 44
+        }
+        return image
     }
 
     private fun getLocationPermission() {
