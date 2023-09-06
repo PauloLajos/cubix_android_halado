@@ -39,8 +39,7 @@ import hu.paulolajos.taxidemo.models.GoogleDirections
 import hu.paulolajos.taxidemo.models.LocationModel
 import hu.paulolajos.taxidemo.models.OrderData
 import hu.paulolajos.taxidemo.models.OrdersInProgress
-import hu.paulolajos.taxidemo.util.Util
-import hu.paulolajos.taxidemo.util.Util.myApiKey
+import hu.paulolajos.taxidemo.util.ApiKey.mapsApiKey
 import okhttp3.OkHttpClient
 import okhttp3.Request
 
@@ -94,8 +93,14 @@ class DriverFragment : Fragment() {
 
     private fun listenToOrders() {
         Log.d(TAG, "start")
+
         val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrdersInProgress")
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -121,7 +126,7 @@ class DriverFragment : Fragment() {
         return "https://maps.googleapis.com/maps/api/directions/json?origin=" +
                 "${orderinprogress.startlat},${orderinprogress.startlng}&destination=" +
                 "${orderinprogress?.targetlat},${orderinprogress?.targetlng}&departure_time=now&key=" +
-                "${myApiKey(requireContext())}"
+                "${mapsApiKey}"
     }
 
     @SuppressLint("MissingPermission")
@@ -151,7 +156,11 @@ class DriverFragment : Fragment() {
     fun findCustomers(radius: Double) {
         testCounter = testCounter + 1
         Log.d(TAG, testCounter.toString())
-        val ref = FirebaseDatabase.getInstance().getReference("/OrderRequests")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrderRequests")
+
         var isFound = false
         val geofire = GeoFire(ref)
         val geoQuery = geofire.queryAtLocation(
@@ -179,8 +188,11 @@ class DriverFragment : Fragment() {
                     distanceToCustomerTextView.text =
                         "The client is at a distance below:" + radius.toString() + "km"
                 }
-                val refsecond = FirebaseDatabase.getInstance()
-                    .getReference("/OrderRequestsTarget/" + key + "/name")
+                val refsecond = FirebaseDatabase
+                    .getInstance()
+                    .reference
+                    .child("OrderRequestsTarget").child(key.toString()).child("name")
+
                 refsecond.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                         //
@@ -188,8 +200,11 @@ class DriverFragment : Fragment() {
 
                     override fun onDataChange(snapshot: DataSnapshot) {
                         val name = snapshot.getValue(String::class.java)
-                        val refthird =
-                            FirebaseDatabase.getInstance().getReference("/OrderData/" + key)
+                        val refthird = FirebaseDatabase
+                            .getInstance()
+                            .reference
+                            .child("OrderData").child(key.toString())
+
                         refthird.addListenerForSingleValueEvent(object : ValueEventListener {
                             override fun onCancelled(error: DatabaseError) {
                                 //
@@ -272,8 +287,14 @@ class DriverFragment : Fragment() {
 
         var firstlocation: GeoLocation? = null
         var secondlocation: GeoLocation
+
         val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/OrderRequests")
+
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrderRequests")
+
         val geoFire = GeoFire(ref)
         geoFire.getLocation(availableDrive.user, object : LocationCallback {
             override fun onLocationResult(key: String?, location: GeoLocation?) {
@@ -293,7 +314,11 @@ class DriverFragment : Fragment() {
 
         })
 
-        var refsecond = FirebaseDatabase.getInstance().getReference("/OrderRequestsTarget")
+        var refsecond = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrderRequestsTarget")
+
         val geoFiresecond = GeoFire(refsecond)
         geoFiresecond.getLocation(availableDrive.user, object : LocationCallback {
             override fun onLocationResult(key: String?, location: GeoLocation?) {
@@ -303,7 +328,11 @@ class DriverFragment : Fragment() {
                         GeoFire.CompletionListener { key, error ->
                             secondlocation = location
                             val refthird =
-                                FirebaseDatabase.getInstance().getReference("/OrderData/" + key)
+                                FirebaseDatabase
+                                    .getInstance()
+                                    .reference
+                                    .child("OrderData").child(key.toString())
+
                             refthird.addListenerForSingleValueEvent(object : ValueEventListener {
                                 override fun onCancelled(error: DatabaseError) {
                                     //To change body of created functions use File | Settings | File Templates.
@@ -313,8 +342,12 @@ class DriverFragment : Fragment() {
 
                                     val orderdata = snapshot.getValue(OrderData::class.java)
 
-                                    refsecond = FirebaseDatabase.getInstance()
-                                        .getReference("/OrdersInProgress").push()
+                                    refsecond = FirebaseDatabase
+                                        .getInstance()
+                                        .reference
+                                        .child("OrdersInProgress")
+                                        .push()
+
                                     val orderinprogress = OrdersInProgress(
                                         uid!!,
                                         key!!,
@@ -329,8 +362,11 @@ class DriverFragment : Fragment() {
                                     )
                                     refsecond.setValue(orderinprogress)
                                     refthird.removeValue()
-                                    val reffourth = FirebaseDatabase.getInstance()
-                                        .getReference("/users/" + uid + "/status")
+                                    val reffourth = FirebaseDatabase
+                                        .getInstance()
+                                        .reference
+                                        .child("users").child(uid).child("status")
+
                                     reffourth.setValue(true)
                                 }
                             })

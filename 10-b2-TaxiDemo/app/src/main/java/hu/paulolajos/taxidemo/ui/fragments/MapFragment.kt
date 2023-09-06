@@ -12,7 +12,6 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import androidx.fragment.app.Fragment
 import com.firebase.geofire.GeoFire
 import com.firebase.geofire.GeoLocation
@@ -21,7 +20,6 @@ import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.maps.CameraUpdateFactory
 import com.google.android.gms.maps.GoogleMap
-import com.google.android.gms.maps.MapView
 import com.google.android.gms.maps.OnMapReadyCallback
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
@@ -35,6 +33,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.maps.android.PolyUtil
 import hu.paulolajos.taxidemo.R
+import hu.paulolajos.taxidemo.databinding.FragmentMapBinding
 import hu.paulolajos.taxidemo.models.OrdersInProgress
 import hu.paulolajos.taxidemo.ui.DriveActivity
 import hu.paulolajos.taxidemo.ui.MapsActivity
@@ -47,10 +46,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private lateinit var locationRequest: LocationRequest
     private lateinit var locationCallback: LocationCallback
+    private var driverMaker: Marker? = null
+
     private lateinit var uid: String
     private var myDriver: String? = null
-    private var root: View? = null
-    private var driverMaker: Marker? = null
+
+    private var _binding: FragmentMapBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     companion object {
         const val TAG = "MapFragment"
@@ -62,22 +66,29 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         savedInstanceState: Bundle?
     ): View? {
 
-        root = inflater.inflate(R.layout.fragment_map, container, false)
+        // Retrieve and inflate the layout for this fragment
+        _binding = FragmentMapBinding.inflate(inflater, container, false)
 
-        val mapview = root!!.findViewById<MapView>(R.id.map)
+        val mapview = binding.map
+
         mapview.onCreate(savedInstanceState)
         mapview.onResume()
         mapview.getMapAsync(this)
 
         uid = FirebaseAuth.getInstance().uid ?: ""
+
         getLocation()
 
-        return root
+        return binding.root
     }
 
     private fun showMyDriver() {
         Log.d(TAG, "showdriver")
-        val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrdersInProgress")
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -98,8 +109,17 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
     fun getMyDriverLocation() {
         val firstref =
-            FirebaseDatabase.getInstance().getReference("/users/" + myDriver + "/lastLocalization")
-        val ref = FirebaseDatabase.getInstance().getReference("/users/" + myDriver)
+            FirebaseDatabase
+                .getInstance()
+                .reference
+                .child("users").child(myDriver.toString())
+                .child("lastLocalization")
+
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(myDriver.toString())
+
         val geofire = GeoFire(ref)
         firstref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -150,8 +170,8 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                 MarkerOptions().position(decodedPolyLine.last()).title("Finish")
                     .icon(BitmapDescriptorFactory.fromResource(R.drawable.finishicon))
             )
-            val buttonEnd = root!!.findViewById(R.id.endRouteButton) as Button
-            buttonEnd.visibility = View.VISIBLE
+
+            binding.endRouteButton.visibility = View.VISIBLE
             /*
             val ref= FirebaseDatabase.getInstance().getReference("/users/"+uid+"/lastLocalization")
             var geofire= GeoFire(ref)
@@ -181,14 +201,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
 
             Log.d(TAG,"driver")
 */
-            buttonEnd.setOnClickListener {
+            binding.endRouteButton.setOnClickListener {
                 val builder = AlertDialog.Builder(context)
                 builder.setTitle("confirm")
                 builder.setMessage("Are you sure you want to end the ride?")
 
                 builder.setPositiveButton("Yes") { dialog, which ->
                     Log.d(TAG, "once")
-                    val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+                    val ref = FirebaseDatabase
+                        .getInstance()
+                        .reference
+                        .child("OrdersInProgress")
+
                     ref.addValueEventListener(object : ValueEventListener {
                         override fun onCancelled(error: DatabaseError) {
                             //
@@ -202,8 +226,12 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                 if (orderinprogress!!.driver == uid || orderinprogress.user == uid) {
                                     it.ref.removeValue()
 
-                                    val reffourth = FirebaseDatabase.getInstance()
-                                        .getReference("/users/" + orderinprogress.driver + "/orders")
+                                    val reffourth = FirebaseDatabase
+                                        .getInstance()
+                                        .reference
+                                        .child("users").child(orderinprogress.driver)
+                                        .child("orders")
+
                                     reffourth.addListenerForSingleValueEvent(object :
                                         ValueEventListener {
                                         override fun onCancelled(error: DatabaseError) {
@@ -221,13 +249,20 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                                 rating = orderFromHistory!!.rating + rating
                                             }
                                             rating = rating / i
-                                            val refsecond = FirebaseDatabase.getInstance()
-                                                .getReference("/users/" + orderinprogress.user + "/orders")
+                                            val refsecond = FirebaseDatabase
+                                                .getInstance()
+                                                .reference
+                                                .child("users").child(orderinprogress.driver)
+                                                .child("orders")
                                                 .push()
                                             refsecond.setValue(orderinprogress)
+
                                             val refthird = FirebaseDatabase.getInstance()
-                                                .getReference("/users/" + orderinprogress.driver + "/orders")
+                                                .reference
+                                                .child("users").child(orderinprogress.driver)
+                                                .child("orders")
                                                 .push()
+
                                             if (rating > 4.0) {
                                                 val newOrder = OrdersInProgress(
                                                     orderinprogress.driver,
@@ -287,15 +322,18 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                                                 )
                                                 refthird.setValue(newOrder)
                                             }
-                                            val reffifth = FirebaseDatabase.getInstance()
-                                                .getReference("/users/" + orderinprogress.driver + "/status")
+                                            val reffifth = FirebaseDatabase
+                                                .getInstance()
+                                                .reference
+                                                .child("users").child(orderinprogress.driver)
+                                                .child("status")
                                             reffifth.setValue(false)
 
-                                            buttonEnd.visibility = View.INVISIBLE
+                                            binding.endRouteButton.visibility = View.INVISIBLE
 
                                             mMap.clear()
 
-                                            buttonEnd.setOnClickListener(null)
+                                            binding.endRouteButton.setOnClickListener(null)
                                             reffourth.removeEventListener(this)
 
                                             Log.d(TAG, "Four")
@@ -319,7 +357,10 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     showMyDriver()
             }
 
-            val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+            val ref = FirebaseDatabase
+                .getInstance()
+                .reference
+                .child("OrdersInProgress")
 
             ref.addValueEventListener(object : ValueEventListener {
                 override fun onCancelled(error: DatabaseError) {
@@ -339,7 +380,7 @@ class MapFragment : Fragment(), OnMapReadyCallback {
                     if (isInBase == false) {
                         mMap.clear()
                         decodedPolyLine.clear()
-                        buttonEnd.visibility = View.INVISIBLE
+                        binding.endRouteButton.visibility = View.INVISIBLE
                         if (activity is MapsActivity) {
                             var bundle = Bundle()
                             bundle.putString("myDriver", myDriver!!)
@@ -373,8 +414,15 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         var hasGps = false
         var hasNetwork = false
 
-        val ref = FirebaseDatabase.getInstance().getReference("/AvailableDrivers")
-        val refsecond = FirebaseDatabase.getInstance().getReference("/users/" + uid)
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("AvailableDrivers")
+
+        val refsecond = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(uid)
 
         val locationmanager =
             activity?.getSystemService(Context.LOCATION_SERVICE) as LocationManager
@@ -503,5 +551,13 @@ class MapFragment : Fragment(), OnMapReadyCallback {
         } else {
             startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         }
+    }
+
+    /**
+     * Frees the binding object when the Fragment is destroyed.
+     */
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }

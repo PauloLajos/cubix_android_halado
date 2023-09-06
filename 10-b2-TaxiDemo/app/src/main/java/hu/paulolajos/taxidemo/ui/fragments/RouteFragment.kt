@@ -33,19 +33,18 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.google.gson.Gson
 import hu.paulolajos.taxidemo.R
+import hu.paulolajos.taxidemo.databinding.FragmentRouteBinding
 import hu.paulolajos.taxidemo.models.GoogleDirections
 import hu.paulolajos.taxidemo.models.LocationModel
 import hu.paulolajos.taxidemo.models.OrderData
 import hu.paulolajos.taxidemo.models.OrdersInProgress
-import hu.paulolajos.taxidemo.util.Util.myApiKey
+import hu.paulolajos.taxidemo.util.ApiKey.mapsApiKey
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.math.RoundingMode
 import java.text.DecimalFormat
 
-
 class RouteFragment : Fragment() {
-
 
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -60,8 +59,14 @@ class RouteFragment : Fragment() {
 
     private var autocompleteFragment: AutocompleteSupportFragment? = null
 
-    private var root: View? = null
+    //private var root: View? = null
     private var alreadyHaveOrder = false
+
+    private var _binding: FragmentRouteBinding? = null
+
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     companion object {
         const val TAG = "RouteFragment"
@@ -72,13 +77,16 @@ class RouteFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        retainInstance = true
+
+        // Retrieve and inflate the layout for this fragment
+        _binding = FragmentRouteBinding.inflate(inflater, container, false)
+
+        //retainInstance = true
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
         getMyLastLocation()
         listenToOrders()
-        root = inflater.inflate(R.layout.fragment_route, container, false)
 
-        return root
+        return binding.root
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
@@ -89,14 +97,14 @@ class RouteFragment : Fragment() {
             childFragmentManager.findFragmentById(R.id.autocomplete_fragment) as? AutocompleteSupportFragment
         autocompleteFragment?.requireView()!!.visibility = View.INVISIBLE
 
-        root!!.findViewById<Button>(R.id.sendToMapButton).setOnClickListener {
+        binding.sendToMapButton.setOnClickListener {
             Log.d(TAG, "sendToMapButton")
             val uid = FirebaseAuth.getInstance().uid
             val ref = FirebaseDatabase
                 .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference("/OrderRequests")
 
-            var geofire = GeoFire(ref)
+            val geofire = GeoFire(ref)
             geofire.setLocation(
                 uid,
                 GeoLocation(myLastLocation!!.latitude, myLastLocation!!.longitude),
@@ -127,17 +135,17 @@ class RouteFragment : Fragment() {
             val orderData = OrderData(getPrice()!!, distance!!)
             fourthref.setValue(orderData)
 
-            root!!.findViewById<ProgressBar>(R.id.progressBarRoute).visibility = View.VISIBLE
-            root!!.findViewById<Button>(R.id.sendToMapButton).visibility = View.INVISIBLE
-            root!!.findViewById<TextView>(R.id.priceTextView).visibility = View.INVISIBLE
-            root!!.findViewById<TextView>(R.id.distanceTextView).visibility = View.INVISIBLE
-            root!!.findViewById<TextView>(R.id.trafficTextView).visibility = View.INVISIBLE
-            root!!.findViewById<TextView>(R.id.infoTextView).visibility = View.VISIBLE
-            root!!.findViewById<Button>(R.id.cancelOrderButton).visibility = View.VISIBLE
+            binding.progressBarRoute.visibility = View.VISIBLE
+            binding.sendToMapButton.visibility = View.INVISIBLE
+            binding.priceTextView.visibility = View.INVISIBLE
+            binding.distanceTextView.visibility = View.INVISIBLE
+            binding.trafficTextView.visibility = View.INVISIBLE
+            binding.infoTextView.visibility = View.VISIBLE
+            binding.cancelOrderButton.visibility = View.VISIBLE
             autocompleteFragment?.requireView()!!.visibility = View.INVISIBLE
         }
 
-        root!!.findViewById<Button>(R.id.cancelOrderButton).setOnClickListener {
+        binding.cancelOrderButton.setOnClickListener {
 
             val uid = FirebaseAuth.getInstance().uid
 
@@ -148,39 +156,41 @@ class RouteFragment : Fragment() {
             val thirdref = FirebaseDatabase
                 .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
                 .getReference("/OrderData/" + uid)
-            val ref = FirebaseDatabase.getInstance().getReference("/OrderRequests/$uid")
+            val ref = FirebaseDatabase
+                .getInstance()
+                .reference
+                .child("OrderRequests").child(uid.toString())
 
             ref.removeValue()
             secondref.removeValue()
             thirdref.removeValue()
 
-            root!!.findViewById<ProgressBar>(R.id.progressBarRoute).visibility = View.INVISIBLE
-            root!!.findViewById<Button>(R.id.sendToMapButton).visibility = View.INVISIBLE
-            root!!.findViewById<TextView>(R.id.priceTextView).visibility = View.VISIBLE
-            root!!.findViewById<TextView>(R.id.distanceTextView).visibility = View.VISIBLE
-            root!!.findViewById<TextView>(R.id.trafficTextView).visibility = View.VISIBLE
-            root!!.findViewById<TextView>(R.id.infoTextView).visibility = View.INVISIBLE
-            root!!.findViewById<Button>(R.id.cancelOrderButton).visibility = View.INVISIBLE
+            binding.progressBarRoute.visibility = View.INVISIBLE
+            binding.sendToMapButton.visibility = View.INVISIBLE
+            binding.priceTextView.visibility = View.VISIBLE
+            binding.distanceTextView.visibility = View.VISIBLE
+            binding.trafficTextView.visibility = View.VISIBLE
+            binding.infoTextView.visibility = View.INVISIBLE
+            binding.cancelOrderButton.visibility = View.INVISIBLE
             autocompleteFragment?.requireView()!!.visibility = View.VISIBLE
 
             distance = null
             traffic = null
 
-            root!!.findViewById<TextView>(R.id.distanceTextView).text = ""
-            root!!.findViewById<TextView>(R.id.priceTextView).text = ""
-            root!!.findViewById<TextView>(R.id.trafficTextView).text = ""
+            binding.distanceTextView.text = ""
+            binding.priceTextView.text = ""
+            binding.trafficTextView.text = ""
         }
 
         Places.initialize(
             requireActivity().applicationContext,
-            //"AIzaSyAAfIfjV2D8akbv2jCyPoaAfSKsD85TepQ"
-            myApiKey(requireActivity())
+            mapsApiKey
         )
 
         val placesClient = Places.createClient(requireActivity().applicationContext)
 
         autocompleteFragment!!.setHint("Click here and enter your destination")
-        autocompleteFragment!!.requireView().setBackground(resources.getDrawable(R.drawable.rounded_login_register_text))
+        //autocompleteFragment!!.requireView().setBackground(resources.getDrawable(R.drawable.rounded_login_register_text))
         autocompleteFragment!!.setPlaceFields(
             listOf(
                 Place.Field.ID,
@@ -200,7 +210,11 @@ class RouteFragment : Fragment() {
                 Log.i(TAG, "An error occurred: $status")
             }
         })
-        val ref = FirebaseDatabase.getInstance().getReference("/rating")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("rating")
+
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //To change body of created functions use File | Settings | File Templates.
@@ -224,7 +238,11 @@ class RouteFragment : Fragment() {
     private fun listenToOrders() {
         Log.d("you note", "start")
         val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrdersInProgress")
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -233,12 +251,13 @@ class RouteFragment : Fragment() {
             override fun onDataChange(snapshot: DataSnapshot) {
                 snapshot.children.forEach {
                     val orderinprogress = it.getValue(OrdersInProgress::class.java)
-                    Log.d("notestujese", orderinprogress!!.user)
+                    Log.d(TAG, orderinprogress!!.user)
+
                     if (orderinprogress!!.user == uid) {
                         val url = getSecondRouteUrl(orderinprogress)
                         alreadyHaveOrder = true
                         GetRoute(url).execute()
-                        Log.d("notestujese", orderinprogress.user)
+                        Log.d(TAG, orderinprogress.user)
                     }
                 }
                 if (!alreadyHaveOrder)
@@ -246,7 +265,11 @@ class RouteFragment : Fragment() {
             }
 
         })
-        val secondRef = FirebaseDatabase.getInstance().getReference("/OrderData")
+
+        val secondRef = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrderData")
         secondRef.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //To change body of created functions use File | Settings | File Templates.
@@ -256,14 +279,14 @@ class RouteFragment : Fragment() {
                 snapshot.children.forEach {
                     if (it.key == uid) {
                         //he was place here
-                        root!!.findViewById<ProgressBar>(R.id.progressBarRoute).visibility = View.VISIBLE
-                        root!!.findViewById<Button>(R.id.sendToMapButton).visibility = View.INVISIBLE
-                        root!!.findViewById<TextView>(R.id.priceTextView).visibility = View.INVISIBLE
-                        root!!.findViewById<TextView>(R.id.distanceTextView).visibility = View.INVISIBLE
-                        root!!.findViewById<TextView>(R.id.trafficTextView).visibility = View.INVISIBLE
-                        root!!.findViewById<TextView>(R.id.infoTextView).visibility = View.VISIBLE
-                        root!!.findViewById<Button>(R.id.cancelOrderButton).visibility = View.VISIBLE
-                        //autocomplete_fragment.view!!.visibility=View.INVISIBLE
+                        binding.progressBarRoute.visibility = View.VISIBLE
+                        binding.sendToMapButton.visibility = View.INVISIBLE
+                        binding.priceTextView.visibility = View.INVISIBLE
+                        binding.distanceTextView.visibility = View.INVISIBLE
+                        binding.trafficTextView.visibility = View.INVISIBLE
+                        binding.infoTextView.visibility = View.VISIBLE
+                        binding.cancelOrderButton.visibility = View.VISIBLE
+                        autocompleteFragment?.view?.visibility=View.INVISIBLE
                     }
                 }
             }
@@ -282,7 +305,11 @@ class RouteFragment : Fragment() {
     }
 
     fun getClosestDriver() {
-        val ref = FirebaseDatabase.getInstance().getReference("/AvailableDrivers")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("AvailableDrivers")
+
         val geofire = GeoFire(ref)
         val geoQuery = geofire.queryAtLocation(
             GeoLocation(
@@ -334,6 +361,7 @@ class RouteFragment : Fragment() {
             }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     fun findRoute() {
         val url = getRouteUrl(myLastLocation!!)
         Log.d(TAG, url)
@@ -342,26 +370,37 @@ class RouteFragment : Fragment() {
     }
 
     fun showDistance() {
-        root!!.findViewById<TextView>(R.id.distanceTextView).text = "distance: " + distance.toString() + "m"
-        root!!.findViewById<TextView>(R.id.priceTextView).text = "Price: " + getPrice().toString() + "$"
-        root!!.findViewById<TextView>(R.id.trafficTextView).text = traffic
+        binding.distanceTextView.text = "distance: ${distance.toString()} m"
+        binding.priceTextView.text = "Price: ${getPrice().toString()} $"
+        binding.trafficTextView.text = traffic
         Log.d(TAG, "showDistance")
     }
 
     @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     private fun getRouteUrl(lastLocation: LocationModel): String {
-        Log.d(TAG,"https://maps.googleapis.com/maps/api/directions/json?origin=${lastLocation.latitude},${lastLocation.longitude}&destination=${targetLocation?.latitude},${targetLocation?.longitude}&departure_time=now&key=${myApiKey(requireContext())}")
-        return "https://maps.googleapis.com/maps/api/directions/json?origin=${lastLocation.latitude},${lastLocation.longitude}&destination=${targetLocation?.latitude},${targetLocation?.longitude}&departure_time=now&key=${myApiKey(requireContext())}"
+
+        Log.d(TAG,"https://maps.googleapis.com/maps/api/directions/json?origin=" +
+                "${lastLocation.latitude},${lastLocation.longitude}&destination=" +
+                "${targetLocation?.latitude},${targetLocation?.longitude}&departure_time=" +
+                "now&key=" + mapsApiKey)
+
+        return "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+                "${lastLocation.latitude},${lastLocation.longitude}&destination=" +
+                "${targetLocation?.latitude},${targetLocation?.longitude}&departure_time=now&key=" +
+                mapsApiKey
     }
 
     private fun getSecondRouteUrl(orderinprogress: OrdersInProgress): String {
-        return "https://maps.googleapis.com/maps/api/directions/json?origin=${orderinprogress.startlat},${orderinprogress.startlng}&destination=${orderinprogress?.targetlat},${orderinprogress?.targetlng}&departure_time=now&key=${myApiKey(requireContext())}"
+        return "https://maps.googleapis.com/maps/api/directions/json?origin=" +
+                "${orderinprogress.startlat},${orderinprogress.startlng}&destination=" +
+                "${orderinprogress.targetlat},${orderinprogress.targetlng}&departure_time=now&key=" +
+                mapsApiKey
     }
 
-
+    @SuppressLint("StaticFieldLeak")
     inner class GetRoute(val url: String) : AsyncTask<Void, Void, ForReturn>() {
 
-
+        @Deprecated("Deprecated in Java")
         override fun doInBackground(vararg p0: Void?): ForReturn {
             val client = OkHttpClient()
             val request = Request.Builder().url(url).build()
@@ -383,24 +422,30 @@ class RouteFragment : Fragment() {
             return distanceAndPoly
         }
 
+        @Deprecated("Deprecated in Java")
         override fun onPostExecute(distanceTemp: ForReturn) {
             Log.d(TAG, distanceTemp.toString())
 
-            if (distanceTemp != null) {
-                distance = distanceTemp.distance
-                decodedPoly = distanceTemp.decodedPolyline
-                traffic = "Time in a traffic jam: " + distanceTemp.traffic
-                if (!alreadyHaveOrder) {
-                    showDistance()
-                    root!!.findViewById<Button>(R.id.sendToMapButton).visibility = View.VISIBLE
-                } else {
-                    sendToMap()
-                }
+            distance = distanceTemp.distance
+            decodedPoly = distanceTemp.decodedPolyline
+            traffic = "Time in a traffic jam: " + distanceTemp.traffic
+            if (!alreadyHaveOrder) {
+                showDistance()
+                binding.sendToMapButton.visibility = View.VISIBLE
+            } else {
+                sendToMap()
             }
         }
+    }
+
+    /**
+     * Frees the binding object when the Fragment is destroyed.
+     */
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
 
 class ForReturn(val distance: Int, val decodedPolyline: String, val traffic: String) {
-    constructor() : this(0, "", "")
 }

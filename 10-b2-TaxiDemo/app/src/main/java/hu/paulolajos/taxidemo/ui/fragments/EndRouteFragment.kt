@@ -35,10 +35,13 @@ class EndRouteFragment : Fragment() {
             RatingBar.OnRatingBarChangeListener { p0, p1, p2 ->
                 Log.d("thisrating", p1.toString())
 
-                val ref = FirebaseDatabase.getInstance().getReference("/users/" + myDriver)
-                    .child("orders")
+                val ref = FirebaseDatabase
+                    .getInstance()
+                    .getReference("/users/" + myDriver)
+                    .child("users").child(myDriver).child("orders")
                     .orderByKey()
                     .limitToLast(1)
+
                 ref.addListenerForSingleValueEvent(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                         //To change body of created functions use File | Settings | File Templates.
@@ -48,11 +51,19 @@ class EndRouteFragment : Fragment() {
                         snapshot.children.forEach { it ->
                             val orderKey = it.key
                             val orderfirst = it.getValue(OrdersInProgress::class.java)
-                            val secondRef = FirebaseDatabase.getInstance()
-                                .getReference("/users/" + myDriver + "/orders/" + orderKey + "/rating")
+                            val secondRef = FirebaseDatabase
+                                .getInstance()
+                                .reference
+                                .child("users").child(myDriver).child("orders")
+                                .child(orderKey.toString()).child("rating")
+
                             secondRef.setValue(p1)
 
-                            val refthird = FirebaseDatabase.getInstance().getReference("users")
+                            val refthird = FirebaseDatabase
+                                .getInstance()
+                                .reference
+                                .child("users")
+
                             refthird.addValueEventListener(object : ValueEventListener {
                                 override fun onCancelled(error: DatabaseError) {
                                     //To change body of created functions use File | Settings | File Templates.

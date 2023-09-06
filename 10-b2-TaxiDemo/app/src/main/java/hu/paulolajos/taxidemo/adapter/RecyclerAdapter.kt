@@ -59,7 +59,8 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                 val uid = FirebaseAuth.getInstance().uid
                 val ref = FirebaseDatabase
                     .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-                    .getReference("/OrderRequests")
+                    .reference
+                    .child("OrderRequests")
 
                 val geoFire = GeoFire(ref)
                 geoFire.getLocation(drive.user, object : LocationCallback {
@@ -80,7 +81,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                 })
 
-                var refsecond = FirebaseDatabase.getInstance().getReference("/OrderRequestsTarget")
+                var refsecond = FirebaseDatabase
+                    .getInstance()
+                    .reference
+                    .child("OrderRequestsTarget")
 
                 val geoFiresecond = GeoFire(refsecond)
                 geoFiresecond.getLocation(drive.user, object : LocationCallback {
@@ -91,8 +95,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                                 GeoFire.CompletionListener { key, error ->
                                     secondlocation = location
                                     val refthird =
-                                        FirebaseDatabase.getInstance()
-                                            .getReference("/OrderData/" + key)
+                                        FirebaseDatabase
+                                            .getInstance()
+                                            .reference
+                                            .child("OrderData").child(key)
 
                                     refthird.addListenerForSingleValueEvent(object :
                                         ValueEventListener {
@@ -103,8 +109,11 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                                         override fun onDataChange(snapshot: DataSnapshot) {
                                             val orderdata = snapshot.getValue(OrderData::class.java)
 
-                                            refsecond = FirebaseDatabase.getInstance()
-                                                .getReference("/OrdersInProgress").push()
+                                            refsecond = FirebaseDatabase
+                                                .getInstance()
+                                                .reference
+                                                .child("OrdersInProgress")
+                                                .push()
                                             val orderinprogress = OrdersInProgress(
                                                 uid!!,
                                                 key!!,
@@ -121,8 +130,10 @@ class RecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
                                             refthird.removeValue()
 
-                                            val reffourth = FirebaseDatabase.getInstance()
-                                                .getReference("/users/" + uid + "/status")
+                                            val reffourth = FirebaseDatabase
+                                                .getInstance()
+                                                .reference
+                                                .child("users").child(uid).child("status")
                                             reffourth.setValue(true)
                                         }
                                     })

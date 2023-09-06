@@ -1,9 +1,11 @@
 package hu.paulolajos.taxidemo.util
 
 import android.app.AlertDialog
+import android.app.Application
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Build
@@ -12,19 +14,6 @@ import androidx.annotation.RequiresApi
 import hu.paulolajos.taxidemo.ui.fragments.RouteFragment
 
 object Util {
-
-    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
-    fun myApiKey(context: Context): String {
-        /*
-        val ai = context.packageManager.getApplicationInfo(
-            context.packageName, PackageManager.ApplicationInfoFlags.of(0)
-        )
-        val bundle = ai.metaData
-        return bundle.getString("com.google.android.geo.API_KEY").toString()       
-         */
-        return "AIzaSyBydEvBDuPpCqCRjDHewm_ZKS2PjPgkRmk"
-    }
-
     fun isLocationEnabledOrNot(context: Context): Boolean {
         val locationManager: LocationManager? =
             context.getSystemService(Context.LOCATION_SERVICE) as LocationManager?
@@ -43,5 +32,28 @@ object Util {
             context.startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
         }
         alertDialog.show()
+    }
+}
+
+object ApiKey {
+    var mapsApiKey: String = ""
+
+    // get MAPS_API_KEY from local.properties file
+    fun getApiKey(application: Application) {
+        try {
+            val app: ApplicationInfo = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                application.packageManager.getApplicationInfo(
+                    application.packageName,
+                    PackageManager.ApplicationInfoFlags.of(0)
+                )
+            } else {
+                @Suppress("DEPRECATION")
+                application.packageManager
+                    .getApplicationInfo(application.packageName, PackageManager.GET_META_DATA)
+            }
+            mapsApiKey = app.metaData.getString("com.google.android.geo.API_KEY").toString()
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+        }
     }
 }
