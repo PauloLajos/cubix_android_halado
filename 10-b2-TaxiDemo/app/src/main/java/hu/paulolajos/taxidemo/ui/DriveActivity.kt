@@ -71,7 +71,9 @@ class DriveActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         val ref = FirebaseDatabase
             .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-            .getReference(".info/connected")
+            .reference
+            .child("info").child("connected")
+
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -81,14 +83,19 @@ class DriveActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
                 val connected = snapshot.getValue(Boolean::class.java)
                 if (connected!!) {
                     val con =
-                        FirebaseDatabase.getInstance().getReference("users/" + uid + "/isOnline")
+                        FirebaseDatabase
+                            .getInstance()
+                            .reference
+                            .child("users").child(uid).child("isOnline")
                     con.setValue(true)
                     con.onDisconnect().setValue(false)
                 }
             }
 
         })
+
         listenOrders()
+
         if (savedInstanceState == null)
             replaceFragment(MyMapFragment())
     }
@@ -141,6 +148,8 @@ class DriveActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
         supportFragmentManager.popBackStack()
         val fragmentTransaction = supportFragmentManager.beginTransaction()
 
+        supportFragmentManager.popBackStack()
+
         if (routeId != null) {
             val bundle = Bundle()
             bundle.putInt("routeId", routeId)
@@ -152,7 +161,11 @@ class DriveActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
     }
 
     private fun listenOrders() {
-        val con = FirebaseDatabase.getInstance().getReference("users/" + uid + "/status")
+        val con = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(uid).child("status")
+
         con.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -205,7 +218,9 @@ class DriveActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelect
 
         val con = FirebaseDatabase
                 .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-                .getReference("users/" + uid + "/isOnline")
+                .reference
+                .child("users").child(uid).child("isOnline")
+
         con.setValue(false)
 
         killActivity()

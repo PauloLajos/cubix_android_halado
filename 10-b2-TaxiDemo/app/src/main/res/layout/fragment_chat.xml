@@ -19,7 +19,7 @@
         android:id="@+id/editTextChat"
         android:layout_width="298dp"
         android:layout_height="87dp"
-        android:layout_gravity="bottom|left"
+        android:layout_gravity="bottom|start"
         android:ems="10"
         android:inputType="textPersonName"
         android:visibility="invisible" />
@@ -28,7 +28,7 @@
         android:id="@+id/buttonChat"
         android:layout_width="98dp"
         android:layout_height="84dp"
-        android:layout_gravity="bottom|right"
+        android:layout_gravity="bottom|end"
         android:text="Send"
         android:visibility="invisible" />
 
@@ -43,7 +43,7 @@
         android:id="@+id/warningTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="30dp"
+        android:layout_marginStart="30dp"
         android:layout_marginTop="200dp"
         android:text="No current order"
         android:textSize="24sp"

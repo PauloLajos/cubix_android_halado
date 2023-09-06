@@ -5,11 +5,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
 import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ChildEventListener
 import com.google.firebase.database.DataSnapshot
@@ -17,9 +14,11 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.GroupieAdapter
 import com.xwray.groupie.GroupieViewHolder
 import com.xwray.groupie.Item
 import hu.paulolajos.taxidemo.R
+import hu.paulolajos.taxidemo.databinding.FragmentChatBinding
 import hu.paulolajos.taxidemo.models.ChatMessage
 import hu.paulolajos.taxidemo.models.OrdersInProgress
 import hu.paulolajos.taxidemo.models.User
@@ -29,14 +28,18 @@ class ChatFragment : Fragment() {
 
     private var messagesRef: String? = null
 
-    private var root: View? = null
-
     private var toId: String? = null
     private var alreadyAdded: Boolean? = null
 
     val uid = FirebaseAuth.getInstance().uid
 
-    val adapter = GroupAdapter<GroupieViewHolder>()
+    //val adapter = GroupAdapter<GroupieViewHolder>()
+    val adapter = GroupieAdapter()
+
+    private var _binding: FragmentChatBinding? = null
+    // This property is only valid between onCreateView and
+    // onDestroyView.
+    private val binding get() = _binding!!
 
     companion object {
         const val TAG = "ChatFragment"
@@ -48,37 +51,47 @@ class ChatFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
 
-        root = inflater.inflate(R.layout.fragment_chat, container, false)
+        // Retrieve and inflate the layout for this fragment
+        _binding = FragmentChatBinding.inflate(inflater, container, false)
+
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         alreadyAdded = true
         loadMessages()
 
-        val chatButton = root!!.findViewById(R.id.buttonChat) as Button
-        val chatEditText = root!!.findViewById(R.id.editTextChat) as EditText
-
-        chatButton.setOnClickListener {
+        binding.buttonChat.setOnClickListener {
             val ref = FirebaseDatabase.getInstance()
-                .getReference("/OrdersInProgress/$messagesRef/messages").push()
+                .reference
+                .child("OrdersInProgress").child(messagesRef.toString()).child("messages")
+                .push()
+
             val message = ChatMessage(
                 uid!!,
                 toId!!,
-                chatEditText.text.toString(),
+                binding.editTextChat.text.toString(),
                 System.currentTimeMillis() / 1000
             )
             ref.setValue(message)
-            chatEditText.text.clear()
-        }
 
-        return root
+            binding.editTextChat.text.clear()
+        }
     }
 
     private fun loadMessages() {
-        val chatButton = root!!.findViewById(R.id.buttonChat) as Button
-        val chatEditText = root!!.findViewById(R.id.editTextChat) as EditText
-        val personTextView = root!!.findViewById(R.id.chatPersonTextView) as TextView
-        val chatRecyclerView = root!!.findViewById(R.id.chatRecyclerView) as RecyclerView
-        val warningTextView = root!!.findViewById(R.id.warningTextView) as TextView
+        val chatButton = binding.buttonChat
+        val chatEditText = binding.editTextChat
+        val personTextView = binding.chatPersonTextView
+        val chatRecyclerView = binding.chatRecyclerView
+        val warningTextView = binding.warningTextView
 
-        val ref = FirebaseDatabase.getInstance().getReference("/OrdersInProgress")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("OrdersInProgress")
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -132,8 +145,12 @@ class ChatFragment : Fragment() {
     }
 
     fun showPerson() {
-        val personTextView = root!!.findViewById(R.id.chatPersonTextView) as TextView
-        val ref = FirebaseDatabase.getInstance().getReference("/users/" + toId)
+        val personTextView = binding.chatPersonTextView
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(toId.toString())
+
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -147,10 +164,15 @@ class ChatFragment : Fragment() {
     }
 
     fun fetchMessages() {
-        val chatRecyclerView = root!!.findViewById(R.id.chatRecyclerView) as RecyclerView
+        val chatRecyclerView = binding.chatRecyclerView
         chatRecyclerView.adapter = adapter
+
         val ref =
-            FirebaseDatabase.getInstance().getReference("/OrdersInProgress/$messagesRef/messages")
+            FirebaseDatabase
+                .getInstance()
+                .reference
+                .child("OrdersInProgress").child(messagesRef.toString()).child("messages")
+
         ref.addChildEventListener(object : ChildEventListener {
             override fun onCancelled(error: DatabaseError) {
                 Log.d("error", "Failed to load message")
@@ -178,6 +200,14 @@ class ChatFragment : Fragment() {
 
             }
         })
+    }
+
+    /**
+     * Frees the binding object when the Fragment is destroyed.
+     */
+    override fun onDestroyView() {
+        _binding = null
+        super.onDestroyView()
     }
 }
 

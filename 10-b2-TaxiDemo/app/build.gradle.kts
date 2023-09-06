@@ -73,6 +73,7 @@ dependencies {
 
     // Groupie
     implementation("com.github.lisawray.groupie:groupie:2.10.0")
+    implementation("com.github.lisawray.groupie:groupie-viewbinding:2.10.0")
 
     // Picasso
     implementation("com.squareup.picasso:picasso:2.71828")

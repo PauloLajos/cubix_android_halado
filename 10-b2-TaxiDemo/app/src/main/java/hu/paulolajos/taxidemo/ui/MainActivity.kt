@@ -14,6 +14,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import hu.paulolajos.taxidemo.R
 import hu.paulolajos.taxidemo.databinding.ActivityMainBinding
+import hu.paulolajos.taxidemo.util.ApiKey
 import hu.paulolajos.taxidemo.util.Util
 
 class MainActivity : AppCompatActivity() {
@@ -30,6 +31,9 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        // get google api key
+        ApiKey.getApiKey(application)
 
         activity = this@MainActivity
 
@@ -83,7 +87,8 @@ class MainActivity : AppCompatActivity() {
                 val uid = FirebaseAuth.getInstance().uid ?: ""
                 val ref = FirebaseDatabase
                     .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-                    .getReference("/users/$uid/isDriver")
+                    .reference
+                    .child("users").child(uid).child("isDriver")
 
                 ref.addListenerForSingleValueEvent(object: ValueEventListener {
                     override fun onCancelled(databaseError: DatabaseError) {

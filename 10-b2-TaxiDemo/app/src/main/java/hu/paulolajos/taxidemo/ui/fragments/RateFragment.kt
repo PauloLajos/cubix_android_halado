@@ -32,7 +32,11 @@ class RateFragment : Fragment() {
         val ratingBar = root!!.findViewById<RatingBar>(R.id.ratingBarAfter)
         ratingBar.onRatingBarChangeListener =
             RatingBar.OnRatingBarChangeListener { p0, p1, p2 ->
-                val ref = FirebaseDatabase.getInstance().getReference("users")
+                val ref = FirebaseDatabase
+                    .getInstance()
+                    .reference
+                    .child("users")
+
                 ref.addValueEventListener(object : ValueEventListener {
                     override fun onCancelled(error: DatabaseError) {
                         //To change body of created functions use File | Settings | File Templates.

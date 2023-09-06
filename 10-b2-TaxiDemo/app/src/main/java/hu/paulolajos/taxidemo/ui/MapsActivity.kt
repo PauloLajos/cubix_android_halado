@@ -6,9 +6,8 @@ import android.util.Log
 import android.view.MenuItem
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentTransaction
 import com.google.android.material.navigation.NavigationView
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -22,12 +21,11 @@ import hu.paulolajos.taxidemo.ui.fragments.MapFragment
 import hu.paulolajos.taxidemo.ui.fragments.OrdersFragment
 import hu.paulolajos.taxidemo.ui.fragments.RouteFragment
 
+
 class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelectedListener {
 
     private lateinit var binding: ActivityMapsBinding
 
-    private var drawerlayout: DrawerLayout? = null
-    private var toolbar: Toolbar? = null
     private var toggle: ActionBarDrawerToggle? = null
     private var fragment: Fragment? = null
     private lateinit var uid: String
@@ -45,23 +43,24 @@ class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
         setSupportActionBar(binding.toolbar)
         supportActionBar!!.setDisplayShowTitleEnabled(false)
-        drawerlayout = binding.root
+
         toggle = ActionBarDrawerToggle(
             this,
-            drawerlayout,
-            toolbar,
+            binding.drawer,
+            binding.toolbar,
             R.string.drawerOpen,
             R.string.drawerClose
         )
-        drawerlayout!!.addDrawerListener(toggle!!)
+        binding.drawer.addDrawerListener(toggle!!)
         toggle!!.syncState()
 
-        fragment = supportFragmentManager.findFragmentById(R.id.fragmentmap)
+        //fragment = supportFragmentManager.findFragmentById(R.id.frameContainer)
         binding.navigationView.setNavigationItemSelectedListener(this)
 
         val ref = FirebaseDatabase
             .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-            .getReference(".info/connected")
+            .reference
+            .child("info").child("connected")
 
         ref.addValueEventListener(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
@@ -74,12 +73,14 @@ class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
                     val con =
                         FirebaseDatabase
                             .getInstance("https://taxidemo-638fe-default-rtdb.europe-west1.firebasedatabase.app")
-                            .getReference("users/" + uid + "/isOnline")
+                            .reference
+                            .child("users").child(uid).child("isOnline")
                     con.setValue(true)
                     con.onDisconnect().setValue(false)
                 }
             }
         })
+
         if (savedInstanceState == null)
             replaceFragment(MapFragment())
     }
@@ -88,20 +89,22 @@ class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
         Log.d(TAG, "cos")
         when (item.itemId) {
             R.id.mapmenuitem -> {
-                Log.d(TAG, "map")
+                Log.d(TAG, "MapFragment")
                 replaceFragment(MapFragment())
             }
 
             R.id.newcourse -> {
-                Log.d(TAG, "newcourse")
+                Log.d(TAG, "RouteFragment")
                 replaceFragment(RouteFragment())
             }
 
             R.id.chatmenuitem -> {
+                Log.d(TAG, "ChatFragment")
                 replaceFragment(ChatFragment())
             }
 
             R.id.ordersMenuItem -> {
+                Log.d(TAG, "OrdersFragment")
                 replaceFragment(OrdersFragment())
             }
 
@@ -114,6 +117,7 @@ class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
 
     private fun logout() {
         var instance = FirebaseAuth.getInstance().signOut()
+
         val intent = Intent(this, MainActivity::class.java)
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         startActivity(intent)
@@ -125,16 +129,24 @@ class MapsActivity : AppCompatActivity(), NavigationView.OnNavigationItemSelecte
     }
 
     private fun replaceFragment(fragment: Fragment, routeId: Int? = null) {
-        this.fragment = fragment
-        val fragmentTransaction = supportFragmentManager.beginTransaction()
-        supportFragmentManager.popBackStack()
+
+        // creating and initializing variable for fragment transaction.
+        val ft: FragmentTransaction = supportFragmentManager.beginTransaction()
+
         if (routeId != null) {
             val bundle = Bundle()
             bundle.putInt("routeId", routeId)
             fragment.arguments = bundle
         }
 
-        fragmentTransaction.replace(R.id.container, fragment)
-        fragmentTransaction.commit()
+        // replacing the parent container with parent fragment.
+        ft.replace(R.id.frameContainer, fragment)
+
+        // committing the transaction.
+        ft.commit()
+
+        /*
+        this.fragment = fragment
+         */
     }
 }

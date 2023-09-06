@@ -76,7 +76,10 @@ class OrdersFragment : Fragment() {
         earnings = 0.0
         rating = 0.0
         val uid = FirebaseAuth.getInstance().uid
-        val ref = FirebaseDatabase.getInstance().getReference("users/" + uid + "/orders")
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(uid.toString()).child("orders")
 
         binding.ordersRecyclerView.adapter = adapter
         ref.addValueEventListener(object : ValueEventListener {
@@ -175,7 +178,11 @@ class OrderItem(val order: OrdersInProgress) : Item<GroupieViewHolder>() {
 
              */
         }
-        val ref = FirebaseDatabase.getInstance().getReference("users/" + order.user)
+        val ref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(order.user)
+
         ref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
@@ -191,7 +198,11 @@ class OrderItem(val order: OrdersInProgress) : Item<GroupieViewHolder>() {
             }
 
         })
-        val secondref = FirebaseDatabase.getInstance().getReference("users/" + order.driver)
+
+        val secondref = FirebaseDatabase
+            .getInstance()
+            .reference
+            .child("users").child(order.driver)
         secondref.addListenerForSingleValueEvent(object : ValueEventListener {
             override fun onCancelled(error: DatabaseError) {
                 //
