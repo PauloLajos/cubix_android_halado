@@ -21,15 +21,23 @@ import android.content.pm.PackageManager
 import android.location.Location
 import android.util.Log
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
 
     private var googleMap: GoogleMap? = null
-
     private var positionMarker = LatLng(46.645870,21.285489)
+    private var userLocation: Location? = null
     private lateinit var fusedLocClient: FusedLocationProviderClient
+
+    // change url: Project/LocationTracker/app/google-services.json:
+    // "firebase_url": "https://locationtracker-940b5-default-rtdb.europe-west1.firebasedatabase.app"
+    private lateinit var database: DatabaseReference
+
 
     companion object {
         private const val REQUEST_LOCATION = 1 //request code to identify specific permission request
@@ -43,6 +51,10 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // init firebase database
+        database = Firebase.database.reference
+
+        // init mapfragment
         val mapFragment: SupportMapFragment? =
             supportFragmentManager.findFragmentById(R.id.googleMap) as? SupportMapFragment
 
@@ -53,6 +65,7 @@ class MainActivity : AppCompatActivity() {
 
                 setupLocationClient()
 
+                // start listening current location
                 getCurrentLocation()
             }
         }
@@ -64,6 +77,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun getCurrentLocation() {
+
         // Check if the ACCESS_FINE_LOCATION permission was granted before requesting a location
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -75,16 +89,17 @@ class MainActivity : AppCompatActivity() {
         } else {
             fusedLocClient.lastLocation.addOnCompleteListener {
                 // lastLocation is a task running in the background
-                val location = it.result //obtain location
+                userLocation = it.result //obtain location
 
 
-                if (location != null) {
+                if (userLocation != null) {
 
-                    positionMarker = LatLng(location.latitude, location.longitude)
+                    positionMarker = LatLng(userLocation!!.latitude, userLocation!!.longitude)
                     moveCamera()
 
                     //Save the location data to the database
-                    setDatabase(location)
+                    writeDatabase()
+
                 } else {
                     // if location is null , log an error message
                     Log.e(TAG, "No location found")
@@ -93,14 +108,14 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setDatabase(location: Location) {
+    private fun writeDatabase() {
+
         //Get a reference to the database, so your app can perform read and write operations
-        val database: FirebaseDatabase = FirebaseDatabase.getInstance()
-        val ref: DatabaseReference = database.getReference("test")
-        ref.setValue(location)
+        database.child(userLocation!!.time.toString()).child("location").setValue(userLocation)
     }
 
     private fun moveCamera() {
+
         googleMap?.addMarker(
             MarkerOptions()
                 .position(positionMarker)
@@ -116,6 +131,7 @@ class MainActivity : AppCompatActivity() {
 
     // prompt the user to grant/deny access
     private fun requestLocPermissions() {
+
         ActivityCompat.requestPermissions(this,
             arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), //permission in the manifest
             REQUEST_LOCATION)
@@ -126,6 +142,7 @@ class MainActivity : AppCompatActivity() {
         permissions: Array<String>,
         grantResults: IntArray)
     {
+
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         //check if the request code matches the REQUEST_LOCATION
         if (requestCode == REQUEST_LOCATION)
