@@ -52,15 +52,6 @@ class LoginFragment : Fragment() {
                 ).addOnSuccessListener {
                     binding.btnLogin.isEnabled = false
 
-                    //startActivity(Intent(this@MainActivity, ForumActivity::class.java))
-                    /*
-                    requireActivity().supportFragmentManager
-                        .beginTransaction()
-                        .replace(binding.root.id, MapsFragment.newInstance())
-                        .commitNow()
-
-                     */
-
                     requireActivity().supportFragmentManager
                         .beginTransaction()
                         .replace(
