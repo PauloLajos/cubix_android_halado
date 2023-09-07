@@ -111,7 +111,10 @@ class MainActivity : AppCompatActivity() {
     private fun writeDatabase() {
 
         //Get a reference to the database, so your app can perform read and write operations
-        database.child(userLocation!!.time.toString()).child("location").setValue(userLocation)
+        database
+            //.child(userLocation!!.time.toString())
+            .child("location")
+            .setValue(userLocation)
     }
 
     private fun moveCamera() {
